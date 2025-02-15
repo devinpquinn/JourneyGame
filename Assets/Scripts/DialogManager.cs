@@ -1,10 +1,11 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class DialogManager : MonoBehaviour
 {
-    public Text dialogText;
+    public TextMeshProUGUI dialogText;
     public Transform choicesContainer;
     public Button choiceButtonPrefab;
     
@@ -77,7 +78,11 @@ public class DialogManager : MonoBehaviour
     void CreateChoiceButton(string text, System.Action onClick)
     {
         Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
-        btn.GetComponentInChildren<Text>().text = text;
+        TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
+        if (btnText != null)
+        {
+            btnText.text = text;
+        }
         btn.onClick.AddListener(() => onClick());
     }
 }
