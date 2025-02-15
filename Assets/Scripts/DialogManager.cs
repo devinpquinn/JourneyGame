@@ -67,6 +67,8 @@ public class DialogManager : MonoBehaviour
 		int roll = Roll3d6();
 		int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
 		bool success = roll < playerStat; // Success if roll is under ability score
+		
+		Debug.Log($"Rolled {roll} against {currentNode.diceCheck.abilityScore} ({playerStat}) - {(success ? "Success" : "Failure")}");
 
 		currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
 		DisplayNode();
