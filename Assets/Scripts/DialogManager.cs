@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class DialogManager : MonoBehaviour
 {
     public Text dialogText;
-    public Button continueButton;
     public Transform choicesContainer;
     public Button choiceButtonPrefab;
     
@@ -26,39 +25,25 @@ public class DialogManager : MonoBehaviour
         // Clear previous choices
         foreach (Transform child in choicesContainer) Destroy(child.gameObject);
 
-        // If there are choices, show them; otherwise, show continue button
-        if (currentNode.choices.Count > 0)
+        if (currentNode.diceCheck.requiresRoll)
         {
-            continueButton.gameObject.SetActive(false);
+            CreateChoiceButton("Roll the Dice", () => ResolveDiceCheck());
+        }
+        else if (currentNode.choices.Count > 0)
+        {
             foreach (var choice in currentNode.choices)
             {
-                Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
-                btn.GetComponentInChildren<Text>().text = choice.choiceText;
-                btn.onClick.AddListener(() => ChooseOption(choice.nextNode));
+                CreateChoiceButton(choice.choiceText, () => ChooseOption(choice.nextNode));
             }
-        }
-        else if (currentNode.diceCheck.requiresRoll)
-        {
-            continueButton.gameObject.SetActive(true);
-            continueButton.onClick.RemoveAllListeners();
-            continueButton.onClick.AddListener(() => ResolveDiceCheck());
         }
         else
         {
-            continueButton.gameObject.SetActive(true);
-            continueButton.onClick.RemoveAllListeners();
-            continueButton.onClick.AddListener(() => Continue());
-        }
-    }
-
-    void Continue()
-    {
-        // Move to the next node, or end scenario if none
-        int index = currentScenario.nodes.IndexOf(currentNode);
-        if (index + 1 < currentScenario.nodes.Count)
-        {
-            currentNode = currentScenario.nodes[index + 1];
-            DisplayNode();
+            // Default "Continue" button
+            int index = currentScenario.nodes.IndexOf(currentNode);
+            if (index + 1 < currentScenario.nodes.Count)
+            {
+                CreateChoiceButton("Continue", () => ChooseOption(currentScenario.nodes[index + 1]));
+            }
         }
     }
 
@@ -87,5 +72,12 @@ public class DialogManager : MonoBehaviour
     {
         // Placeholder: Fetch actual ability score from the player's stats
         return 10; // Default ability score
+    }
+
+    void CreateChoiceButton(string text, System.Action onClick)
+    {
+        Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
+        btn.GetComponentInChildren<Text>().text = text;
+        btn.onClick.AddListener(() => onClick());
     }
 }
