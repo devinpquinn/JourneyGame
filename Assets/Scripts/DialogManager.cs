@@ -5,84 +5,92 @@ using System.Collections.Generic;
 
 public class DialogManager : MonoBehaviour
 {
-    public TextMeshProUGUI dialogText;
-    public Transform choicesContainer;
-    public Button choiceButtonPrefab;
-    
-    private DialogNodeSO currentNode;
-    private ScenarioSO currentScenario;
+	public TextMeshProUGUI dialogText;
+	public Transform choicesContainer;
+	public Button choiceButtonPrefab;
+	
+	private DialogNodeSO currentNode;
+	private ScenarioSO currentScenario;
+	
+	public ScenarioSO testScenario;
 
-    public void StartScenario(ScenarioSO scenario)
-    {
-        currentScenario = scenario;
-        currentNode = scenario.nodes[0]; // Start from the first node
-        DisplayNode();
-    }
+	void Start()
+	{
+		StartScenario(testScenario);
+	}
 
-    void DisplayNode()
-    {
-        dialogText.text = currentNode.text;
+	
+	public void StartScenario(ScenarioSO scenario)
+	{
+		currentScenario = scenario;
+		currentNode = scenario.nodes[0]; // Start from the first node
+		DisplayNode();
+	}
 
-        // Clear previous choices
-        foreach (Transform child in choicesContainer) Destroy(child.gameObject);
+	void DisplayNode()
+	{
+		dialogText.text = currentNode.text;
 
-        if (currentNode.diceCheck.requiresRoll)
-        {
-            CreateChoiceButton("Roll the Dice", () => ResolveDiceCheck());
-        }
-        else if (currentNode.choices.Count > 0)
-        {
-            foreach (var choice in currentNode.choices)
-            {
-                CreateChoiceButton(choice.choiceText, () => ChooseOption(choice.nextNode));
-            }
-        }
-        else
-        {
-            // Default "Continue" button
-            int index = currentScenario.nodes.IndexOf(currentNode);
-            if (index + 1 < currentScenario.nodes.Count)
-            {
-                CreateChoiceButton("Continue", () => ChooseOption(currentScenario.nodes[index + 1]));
-            }
-        }
-    }
+		// Clear previous choices
+		foreach (Transform child in choicesContainer) Destroy(child.gameObject);
 
-    void ChooseOption(DialogNodeSO nextNode)
-    {
-        currentNode = nextNode;
-        DisplayNode();
-    }
+		if (currentNode.diceCheck.requiresRoll)
+		{
+			CreateChoiceButton("Roll the Dice", () => ResolveDiceCheck());
+		}
+		else if (currentNode.choices.Count > 0)
+		{
+			foreach (var choice in currentNode.choices)
+			{
+				CreateChoiceButton(choice.choiceText, () => ChooseOption(choice.nextNode));
+			}
+		}
+		else
+		{
+			// Default "Continue" button
+			int index = currentScenario.nodes.IndexOf(currentNode);
+			if (index + 1 < currentScenario.nodes.Count)
+			{
+				CreateChoiceButton("Continue", () => ChooseOption(currentScenario.nodes[index + 1]));
+			}
+		}
+	}
 
-    void ResolveDiceCheck()
-    {
-        int roll = Roll3d6();
-        int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
-        bool success = roll < playerStat; // Success if roll is under ability score
+	void ChooseOption(DialogNodeSO nextNode)
+	{
+		currentNode = nextNode;
+		DisplayNode();
+	}
 
-        currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
-        DisplayNode();
-    }
+	void ResolveDiceCheck()
+	{
+		int roll = Roll3d6();
+		int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
+		bool success = roll < playerStat; // Success if roll is under ability score
 
-    int Roll3d6()
-    {
-        return Random.Range(1, 7) + Random.Range(1, 7) + Random.Range(1, 7);
-    }
+		currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
+		DisplayNode();
+	}
 
-    int GetPlayerStat(string ability)
-    {
-        // Placeholder: Fetch actual ability score from the player's stats
-        return 10; // Default ability score
-    }
+	int Roll3d6()
+	{
+		return Random.Range(1, 7) + Random.Range(1, 7) + Random.Range(1, 7);
+	}
 
-    void CreateChoiceButton(string text, System.Action onClick)
-    {
-        Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
-        TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
-        if (btnText != null)
-        {
-            btnText.text = text;
-        }
-        btn.onClick.AddListener(() => onClick());
-    }
+	int GetPlayerStat(string ability)
+	{
+		// Placeholder: Fetch actual ability score from the player's stats
+		return 10; // Default ability score
+	}
+
+	void CreateChoiceButton(string text, System.Action onClick)
+	{
+		Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
+		TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
+		if (btnText != null)
+		{
+			btnText.text = text;
+		}
+		btn.onClick.AddListener(() => onClick());
+	}
 }
