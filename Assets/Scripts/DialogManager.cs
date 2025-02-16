@@ -60,20 +60,31 @@ public class DialogManager : MonoBehaviour
 
     void ResolveDiceCheck()
     {
-        int roll = Roll3d6();
+        int die1 = Random.Range(1, 7);
+        int die2 = Random.Range(1, 7);
+        int die3 = Random.Range(1, 7);
+        int roll = die1 + die2 + die3;
         int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
-        bool success = roll < playerStat; // Success if roll is under ability score
 
-        string rollResult = $"(Rolled {roll}, Need Under {playerStat})";
+        bool success;
+        if (roll == 3) // Triple ones always succeed
+        {
+            success = true;
+        }
+        else if (roll == 18) // Triple sixes always fail
+        {
+            success = false;
+        }
+        else
+        {
+            success = roll < playerStat; // Normal success check
+        }
+
+        string rollResult = $"(Rolled {die1}, {die2}, {die3} = {roll}, Need Under {playerStat})";
         AppendDialogText(rollResult);
 
         currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
         DisplayNode();
-    }
-
-    int Roll3d6()
-    {
-        return Random.Range(1, 7) + Random.Range(1, 7) + Random.Range(1, 7);
     }
 
     int GetPlayerStat(string ability)
