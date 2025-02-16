@@ -598,11 +598,11 @@ MonoBehaviour:
   m_Content: {fileID: 1613371141}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 36
   m_Viewport: {fileID: 1970725796}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 2048202254}
@@ -864,7 +864,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 920, y: 0}
+  m_SizeDelta: {x: 924, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1613371142
 MonoBehaviour:
@@ -893,10 +893,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 2
+    m_Right: 2
+    m_Top: 2
+    m_Bottom: 2
   m_ChildAlignment: 7
   m_Spacing: 36
   m_ChildForceExpandWidth: 0
