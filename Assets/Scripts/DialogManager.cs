@@ -83,10 +83,24 @@ public class DialogManager : MonoBehaviour
     }
 
     void AppendDialogText(string text)
-    {
-        TextMeshProUGUI newDialogText = Instantiate(dialogTextPrefab, dialogLogContainer);
-        newDialogText.text = text;
-    }
+	{
+    	// Reduce opacity of existing dialog entries
+    	foreach (Transform child in dialogLogContainer)
+    	{
+        	TextMeshProUGUI previousText = child.GetComponent<TextMeshProUGUI>();
+        	if (previousText != null)
+        	{
+            	Color fadedColor = previousText.color;
+            	fadedColor.a = 0.25f; // Set to half opacity
+            	previousText.color = fadedColor;
+        	}
+    	}
+
+    	// Add new dialog entry with full opacity
+    	TextMeshProUGUI newDialogText = Instantiate(dialogTextPrefab, dialogLogContainer);
+    	newDialogText.text = text;
+    	newDialogText.color = new Color(1, 1, 1, 1); // Full opacity for the latest text
+	}
 
     void ScrollToBottom()
     {
