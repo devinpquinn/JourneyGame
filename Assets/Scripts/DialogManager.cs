@@ -59,33 +59,30 @@ public class DialogManager : MonoBehaviour
     }
 
     void ResolveDiceCheck()
+{
+    int roll = Random.Range(1, 21); // Roll 1d20
+    int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
+
+    bool success;
+    if (roll == 20) // Natural 20 always succeeds
     {
-        int die1 = Random.Range(1, 7);
-        int die2 = Random.Range(1, 7);
-        int die3 = Random.Range(1, 7);
-        int roll = die1 + die2 + die3;
-        int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
-
-        bool success;
-        if (roll == 3) // Triple ones always succeed
-        {
-            success = true;
-        }
-        else if (roll == 18) // Triple sixes always fail
-        {
-            success = false;
-        }
-        else
-        {
-            success = roll < playerStat; // Normal success check
-        }
-
-        string rollResult = $"(Rolled {die1}, {die2}, {die3} = {roll}, Need Under {playerStat})";
-        AppendDialogText(rollResult);
-
-        currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
-        DisplayNode();
+        success = true;
     }
+    else if (roll == 1) // Natural 1 always fails
+    {
+        success = false;
+    }
+    else
+    {
+        success = roll < playerStat; // Normal success check
+    }
+
+    string rollResult = $"(Rolled {roll}, Need Under {playerStat})";
+    AppendDialogText(rollResult);
+
+    currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
+    DisplayNode();
+}
 
     int GetPlayerStat(string ability)
     {

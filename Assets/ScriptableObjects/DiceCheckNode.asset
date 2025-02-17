@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
   m_Name: DiceCheckNode
   m_EditorClassIdentifier: 
-  text: You must test your Courage! Roll 3d6 to see if you succeed.
+  text: You must test your Courage! Roll to see if you succeed.
   choices: []
   diceCheck:
     requiresRoll: 1
