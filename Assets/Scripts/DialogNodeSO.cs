@@ -20,7 +20,6 @@ public class Choice
 public class DiceCheck
 {
     public bool requiresRoll;
-    public int difficulty;
     public string abilityScore;
     public DialogNodeSO successNode;
     public DialogNodeSO failureNode;

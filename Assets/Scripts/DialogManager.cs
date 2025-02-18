@@ -13,6 +13,7 @@ public class DialogManager : MonoBehaviour
 
 	private DialogNodeSO currentNode;
 	private ScenarioSO currentScenario;
+	public ScenarioManager scenarioManager;
 	
 	public PlayerCharacterSO playerCharacter;
 
@@ -38,17 +39,17 @@ public class DialogManager : MonoBehaviour
 		{
 			foreach (var choice in currentNode.choices)
 			{
+				if(choice.choiceText.Length < 1)
+				{
+					choice.choiceText = "Continue";
+				}
 				CreateChoiceButton(choice.choiceText, () => ChooseOption(choice.nextNode));
 			}
 		}
 		else
 		{
-			// Default "Continue" button
-			int index = currentScenario.nodes.IndexOf(currentNode);
-			if (index + 1 < currentScenario.nodes.Count)
-			{
-				CreateChoiceButton("Continue", () => ChooseOption(currentScenario.nodes[index + 1]));
-			}
+			// End of scenario
+			CreateChoiceButton("End Scenario", () => scenarioManager.SelectNextScenario());
 		}
 
 		ScrollToBottom(); // Auto-scroll to the latest dialog entry

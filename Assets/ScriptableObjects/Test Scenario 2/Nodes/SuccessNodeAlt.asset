@@ -9,9 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7de6c3a78cf09459a679a39b003b0e, type: 3}
-  m_Name: TestScenario
+  m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
+  m_Name: SuccessNodeAlt
   m_EditorClassIdentifier: 
-  scenarioTitle: Test Scenario
-  nodes:
-  - {fileID: 11400000, guid: da7b635ff36e03541afc9b31689bd850, type: 2}
+  text: You have succeeded! You continue onward.
+  choices: []
+  diceCheck:
+    requiresRoll: 0
+    difficulty: 0
+    abilityScore: 
+    successNode: {fileID: 0}
+    failureNode: {fileID: 0}

@@ -195,7 +195,6 @@ GameObject:
   m_Component:
   - component: {fileID: 310342972}
   - component: {fileID: 310342971}
-  - component: {fileID: 310342973}
   m_Layer: 0
   m_Name: DialogManager
   m_TagString: Untagged
@@ -220,6 +219,7 @@ MonoBehaviour:
   dialogTextPrefab: {fileID: 483824589502282648, guid: 22aeab3d407e0634880b3f6a445b2c99, type: 3}
   choicesContainer: {fileID: 39040924}
   choiceButtonPrefab: {fileID: 3572076772021824882, guid: 42d007a25d1e6cb479bf534d2fe28c66, type: 3}
+  scenarioManager: {fileID: 1722952340}
   playerCharacter: {fileID: 11400000, guid: fdbf408bacd867e4baf9bf172473d8cf, type: 2}
 --- !u!4 &310342972
 Transform:
@@ -236,20 +236,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &310342973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310342970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd040d8647d933846b5d0ef2fcd880c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogManager: {fileID: 310342971}
-  scenario: {fileID: 11400000, guid: 3279e1067a07c984f93e573f24e6dbff, type: 2}
 --- !u!1 &411154691
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,6 +893,52 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1722952339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722952341}
+  - component: {fileID: 1722952340}
+  m_Layer: 0
+  m_Name: ScenarioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1722952340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722952339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c57509141b461944694a7dd72a960c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogManager: {fileID: 310342971}
+  scenariosResourceFolder: Scenarios
+--- !u!4 &1722952341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722952339}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1733800880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,3 +1345,4 @@ SceneRoots:
   - {fileID: 1604429270}
   - {fileID: 1955434905}
   - {fileID: 310342972}
+  - {fileID: 1722952341}
