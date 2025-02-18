@@ -45,6 +45,7 @@ public class ScenarioManager : MonoBehaviour
 			ScenarioSO selectedScenario = availableScenarios[index];
 			availableScenarios.RemoveAt(index);
 
+			dialogManager.ClearDialogLog(); // Clear the dialog log before starting a new scenario
 			dialogManager.StartScenario(selectedScenario);
 		}
 		else

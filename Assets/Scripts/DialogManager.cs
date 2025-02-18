@@ -115,6 +115,14 @@ public class DialogManager : MonoBehaviour
 		newDialogText.text = text;
 		newDialogText.color = new Color(1, 1, 1, 1); // Full opacity for the latest text
 	}
+	
+	public void ClearDialogLog()
+	{
+		foreach (Transform child in dialogLogContainer)
+		{
+			Destroy(child.gameObject);
+		}
+	}
 
 	void ScrollToBottom()
 	{

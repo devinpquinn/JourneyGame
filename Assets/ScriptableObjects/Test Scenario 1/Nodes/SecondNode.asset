@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: You have progressed further!
   choices:
-  - choiceText: Attempt the Challenge
+  - choiceText: Continue
     nextNode: {fileID: 11400000, guid: 2cabe37817f052e4b81073e6c662f4c9, type: 2}
   diceCheck:
     requiresRoll: 0
-    difficulty: 0
     abilityScore: 
     successNode: {fileID: 0}
     failureNode: {fileID: 0}
