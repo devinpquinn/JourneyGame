@@ -33,7 +33,11 @@ public class DialogManager : MonoBehaviour
 
 		if (currentNode.diceCheck.requiresRoll)
 		{
-			CreateChoiceButton("Roll the Dice", () => ResolveDiceCheck());
+			string virtueName = currentNode.diceCheck.abilityScore;
+			int playerStat = GetPlayerStat(virtueName);
+			int chanceOfSuccess = Mathf.RoundToInt((playerStat - 1) / 20.0f * 100);
+			string buttonText = $"Test Your {virtueName} ({chanceOfSuccess}%)";
+			CreateChoiceButton(buttonText, () => ResolveDiceCheck());
 		}
 		else if (currentNode.choices.Count > 0)
 		{
