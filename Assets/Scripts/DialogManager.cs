@@ -79,7 +79,18 @@ public class DialogManager : MonoBehaviour
 			TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
 			
 			// Set button text to "Continue" if choice text is empty
-			buttonText.text = string.IsNullOrEmpty(choice.choiceText) ? "Continue" : choice.choiceText;
+			if (string.IsNullOrEmpty(choice.choiceText))
+			{
+				buttonText.text = "Continue";
+			}
+			else
+			{
+				buttonText.text = choice.choiceText;
+				if (choice.isDiceCheck)
+				{
+					buttonText.text += $" ({choice.abilityToCheck})";
+				}
+			}
 
 			Button button = choiceButtonObj.GetComponent<Button>();
 			button.onClick.AddListener(() => OnChoiceSelected(choice));

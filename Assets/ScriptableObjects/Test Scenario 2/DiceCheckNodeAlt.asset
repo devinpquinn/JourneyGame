@@ -19,3 +19,8 @@ MonoBehaviour:
     isDiceCheck: 1
     abilityToCheck: Cunning
     nextNodeOnFailure: {fileID: 11400000, guid: 83a42ee7aae106c4e85c576930cb7f81, type: 2}
+  - choiceText: Turn Back
+    nextNode: {fileID: 11400000, guid: e59fab015a0494e4f9a61adeeef0830d, type: 2}
+    isDiceCheck: 0
+    abilityToCheck: 
+    nextNodeOnFailure: {fileID: 0}
