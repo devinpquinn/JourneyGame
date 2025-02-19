@@ -1,143 +1,133 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class DialogManager : MonoBehaviour
 {
-	public Transform dialogLogContainer; // Container for scrollable text
-	public ScrollRect scrollRect;
-	public TextMeshProUGUI dialogTextPrefab; // Prefab for text blocks
-	public Transform choicesContainer;
-	public Button choiceButtonPrefab;
+	public Transform dialogLogContainer; // UI container for dialog log entries
+	public GameObject dialogTextPrefab; // Prefab for displaying dialog text
+	public GameObject choiceButtonPrefab; // Prefab for displaying choices
+	public Transform choiceContainer; // UI container for choices
+
+	public ScenarioManager scenarioManager; // Reference to the scenario manager
+	public PlayerCharacterSO playerCharacter; // Reference to the player character
 
 	private DialogNodeSO currentNode;
-	private ScenarioSO currentScenario;
-	public ScenarioManager scenarioManager;
-	
-	public PlayerCharacterSO playerCharacter;
 
 	public void StartScenario(ScenarioSO scenario)
 	{
-		currentScenario = scenario;
-		currentNode = scenario.nodes[0]; // Start from the first node
-		DisplayNode();
-	}
+		ClearDialogLog();
 
-	void DisplayNode()
-	{
-		AppendDialogText(currentNode.text); // Append new dialog text
-
-		// Clear previous choices
-		foreach (Transform child in choicesContainer) Destroy(child.gameObject);
-
-		if (currentNode.diceCheck.requiresRoll)
+		if (scenario.nodes.Count > 0) // Ensure the scenario has nodes
 		{
-			string virtueName = currentNode.diceCheck.abilityScore;
-			int playerStat = GetPlayerStat(virtueName);
-			int chanceOfSuccess = Mathf.RoundToInt((playerStat - 1) / 20.0f * 100);
-			string buttonText = $"Test Your {virtueName} ({chanceOfSuccess}%)";
-			CreateChoiceButton(buttonText, () => ResolveDiceCheck());
-		}
-		else if (currentNode.choices.Count > 0)
-		{
-			foreach (var choice in currentNode.choices)
-			{
-				if(choice.choiceText.Length < 1)
-				{
-					choice.choiceText = "Continue";
-				}
-				CreateChoiceButton(choice.choiceText, () => ChooseOption(choice.nextNode));
-			}
+			AdvanceToNode(scenario.nodes[0]); // Start from the first node
 		}
 		else
 		{
-			// End of scenario
-			CreateChoiceButton("End Scenario", () => scenarioManager.SelectNextScenario());
+			Debug.LogWarning("Scenario has no dialog nodes!");
 		}
-
-		ScrollToBottom(); // Auto-scroll to the latest dialog entry
 	}
 
-	void ChooseOption(DialogNodeSO nextNode)
+	public void AdvanceToNode(DialogNodeSO node)
 	{
-		currentNode = nextNode;
-		DisplayNode();
-	}
+		currentNode = node;
 
-	void ResolveDiceCheck()
-	{
-		int roll = Random.Range(1, 21); // Roll 1d20
-		int playerStat = GetPlayerStat(currentNode.diceCheck.abilityScore);
-
-		bool success;
-		if (roll == 20) // Natural 20 always succeeds
+		if (currentNode == null)
 		{
-			success = true;
-		}
-		else if (roll == 1) // Natural 1 always fails
-		{
-			success = false;
-		}
-		else
-		{
-			success = roll < playerStat; // Normal success check
+			scenarioManager.SelectNextScenario(); // Move to the next scenario when no more nodes exist
+			return;
 		}
 
-		string rollResult = $"(Rolled {roll}, Need Under {playerStat})";
-		AppendDialogText(rollResult);
-
-		currentNode = success ? currentNode.diceCheck.successNode : currentNode.diceCheck.failureNode;
-		DisplayNode();
+		AppendDialogText(currentNode.text); // Ensure this matches your actual property name
+		CreateChoiceButtons();
 	}
 
-	int GetPlayerStat(string ability)
+	private void AppendDialogText(string text)
 	{
-		return playerCharacter.GetVirtueScore(ability);
-	}
+		// Instantiate new dialog entry in the log
+		GameObject newDialogText = Instantiate(dialogTextPrefab, dialogLogContainer);
+		TMP_Text tmpText = newDialogText.GetComponent<TMP_Text>();
+		tmpText.text = text;
 
-	void AppendDialogText(string text)
-	{
-		// Reduce opacity of existing dialog entries
+		// Fade out previous dialog entries
 		foreach (Transform child in dialogLogContainer)
 		{
-			TextMeshProUGUI previousText = child.GetComponent<TextMeshProUGUI>();
-			if (previousText != null)
+			if (child != newDialogText.transform)
 			{
-				Color fadedColor = previousText.color;
-				fadedColor.a = 0.25f; // Set to half opacity
-				previousText.color = fadedColor;
+				TMP_Text childText = child.GetComponent<TMP_Text>();
+				if (childText != null)
+				{
+					childText.color = new Color(childText.color.r, childText.color.g, childText.color.b, 0.5f);
+				}
 			}
 		}
-
-		// Add new dialog entry with full opacity
-		TextMeshProUGUI newDialogText = Instantiate(dialogTextPrefab, dialogLogContainer);
-		newDialogText.text = text;
-		newDialogText.color = new Color(1, 1, 1, 1); // Full opacity for the latest text
 	}
-	
+
+	private void CreateChoiceButtons()
+	{
+		// Clear existing choices
+		foreach (Transform child in choiceContainer)
+		{
+			Destroy(child.gameObject);
+		}
+
+		foreach (Choice choice in currentNode.choices)
+		{
+			GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
+			TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
+			
+			// Set button text to "Continue" if choice text is empty
+			buttonText.text = string.IsNullOrEmpty(choice.choiceText) ? "Continue" : choice.choiceText;
+
+			Button button = choiceButtonObj.GetComponent<Button>();
+			button.onClick.AddListener(() => OnChoiceSelected(choice));
+		}
+		if (currentNode.choices.Count == 0)
+		{
+			//if there are no choices, generate a button that starts the next scenario
+			GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
+			TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
+			buttonText.text = "End Scenario";
+			
+			Button button = choiceButtonObj.GetComponent<Button>();
+			button.onClick.AddListener(() => scenarioManager.SelectNextScenario());
+		}
+	}
+
+	public void OnChoiceSelected(Choice choice)
+	{
+		if (choice.isDiceCheck)
+		{
+			PerformDiceCheck(choice);
+		}
+		else
+		{
+			AdvanceToNode(choice.nextNode);
+		}
+	}
+
+	private void PerformDiceCheck(Choice choice)
+	{
+		int roll = Random.Range(1, 21); // Roll 1d20
+		int abilityScore = playerCharacter.GetVirtueScore(choice.abilityToCheck); // Get the relevant virtue
+
+		bool success = roll < abilityScore || roll == 20; // Roll under virtue = success, 20 always succeeds, 1 always fails
+		bool autoFail = roll == 1; // Roll of 1 always fails
+
+		DialogNodeSO resultNode = (success && !autoFail) ? choice.nextNode : choice.nextNodeOnFailure;
+
+		AppendDialogText($"(Rolled {roll} vs {abilityScore}) " + (success ? "Success!" : "Failure!"));
+
+		AdvanceToNode(resultNode);
+	}
+
 	public void ClearDialogLog()
 	{
 		foreach (Transform child in dialogLogContainer)
 		{
 			Destroy(child.gameObject);
 		}
-	}
-
-	void ScrollToBottom()
-	{
-		Canvas.ForceUpdateCanvases();
-		scrollRect.verticalNormalizedPosition = 0f;
-	}
-
-	void CreateChoiceButton(string text, System.Action onClick)
-	{
-		Button btn = Instantiate(choiceButtonPrefab, choicesContainer);
-		TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
-		if (btnText != null)
-		{
-			btnText.text = text;
-		}
-		btn.onClick.AddListener(() => onClick());
 	}
 }

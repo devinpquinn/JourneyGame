@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
-  m_Name: SecondNode
+  m_Name: DiceCheckNodeAlt
   m_EditorClassIdentifier: 
-  text: You have progressed further!
+  text: You must test your Cunning! Roll to see if you succeed.
   choices:
-  - choiceText: Continue
-    nextNode: {fileID: 11400000, guid: 2cabe37817f052e4b81073e6c662f4c9, type: 2}
-  diceCheck:
-    requiresRoll: 0
-    abilityScore: 
-    successNode: {fileID: 0}
-    failureNode: {fileID: 0}
+  - choiceText: Test Your Cunning
+    nextNode: {fileID: 11400000, guid: f373870e8109e1b4bbaa0acd3ec5ace4, type: 2}
+    isDiceCheck: 1
+    abilityToCheck: Cunning
+    nextNodeOnFailure: {fileID: 11400000, guid: 83a42ee7aae106c4e85c576930cb7f81, type: 2}

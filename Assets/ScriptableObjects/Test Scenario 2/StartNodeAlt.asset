@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
-  m_Name: SecondNodeAlt
+  m_Name: StartNodeAlt
   m_EditorClassIdentifier: 
-  text: You have progressed further!
+  text: Welcome to the adventure, traveler!
   choices:
-  - choiceText: Continue
-    nextNode: {fileID: 11400000, guid: 31f7b84332224f3468087ac8806a5364, type: 2}
-  diceCheck:
-    requiresRoll: 0
-    abilityScore: 
-    successNode: {fileID: 0}
-    failureNode: {fileID: 0}
+  - choiceText: 
+    nextNode: {fileID: 11400000, guid: 28fd7e468020ca24b8875fd7a13db9a2, type: 2}
+    isDiceCheck: 0
+    abilityToCheck: 
+    nextNodeOnFailure: {fileID: 0}

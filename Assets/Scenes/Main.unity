@@ -215,10 +215,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogLogContainer: {fileID: 1613371141}
-  scrollRect: {fileID: 803603600}
-  dialogTextPrefab: {fileID: 483824589502282648, guid: 22aeab3d407e0634880b3f6a445b2c99, type: 3}
-  choicesContainer: {fileID: 39040924}
-  choiceButtonPrefab: {fileID: 3572076772021824882, guid: 42d007a25d1e6cb479bf534d2fe28c66, type: 3}
+  dialogTextPrefab: {fileID: 1442766515633971112, guid: 22aeab3d407e0634880b3f6a445b2c99, type: 3}
+  choiceButtonPrefab: {fileID: 497526079611708861, guid: 42d007a25d1e6cb479bf534d2fe28c66, type: 3}
+  choiceContainer: {fileID: 39040924}
   scenarioManager: {fileID: 1722952340}
   playerCharacter: {fileID: 11400000, guid: fdbf408bacd867e4baf9bf172473d8cf, type: 2}
 --- !u!4 &310342972

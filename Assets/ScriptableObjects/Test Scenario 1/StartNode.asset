@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
-  m_Name: DiceCheckNode
+  m_Name: StartNode
   m_EditorClassIdentifier: 
-  text: You must test your Courage! Roll to see if you succeed.
-  choices: []
-  diceCheck:
-    requiresRoll: 1
-    difficulty: 10
-    abilityScore: Courage
-    successNode: {fileID: 11400000, guid: ed017feab3540ca4ab5a9ca61d4a70c5, type: 2}
-    failureNode: {fileID: 11400000, guid: 230aff57fc6cfc642a394601dba9d36d, type: 2}
+  text: Welcome to the adventure!
+  choices:
+  - choiceText: 
+    nextNode: {fileID: 11400000, guid: 45ad6f853a2fedd4b846b35ffa9f13d5, type: 2}
+    isDiceCheck: 0
+    abilityToCheck: 
+    nextNodeOnFailure: {fileID: 0}
