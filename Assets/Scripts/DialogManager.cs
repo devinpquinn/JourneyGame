@@ -129,7 +129,7 @@ public class DialogManager : MonoBehaviour
 
 		DialogNodeSO resultNode = (success && !autoFail) ? choice.nextNode : choice.nextNodeOnFailure;
 
-		string resultText = success ? "SUCCESS" : "FAILURE";
+		string resultText = success ? "<color=green>PASSED</color>" : "<color=red>FAILED</color>";
 		AppendDialogText($"{resultText} - rolled a {roll} against your {abilityScore} ({choice.abilityToCheck}).");
 
 		AdvanceToNode(resultNode);
