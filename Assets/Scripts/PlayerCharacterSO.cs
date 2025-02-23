@@ -48,6 +48,8 @@ public class PlayerCharacterSO : ScriptableObject
 			case "Goodness": Goodness += value; break;
 			case "Grace": Grace += value; break;
 		}
+		
+		Debug.Log(virtue + ": " + GetVirtue(virtue));
 	}
 	
 	public void ModifyLuck(int value)
@@ -59,6 +61,8 @@ public class PlayerCharacterSO : ScriptableObject
 	{
 		CurrentHealth += value;
 		CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+		
+		Debug.Log("Health: " + CurrentHealth + "/" + MaxHealth);
 	}
 	
 	public void ModifyMaxHealth(int value)
@@ -77,6 +81,8 @@ public class PlayerCharacterSO : ScriptableObject
 	{
 		CurrentMorale += value;
 		CurrentMorale = Mathf.Clamp(CurrentMorale, 0, MaxMorale);
+		
+		Debug.Log("Morale: " + CurrentMorale + "/" + MaxMorale);
 	}
 	
 	public void ModifyMaxMorale(int value)

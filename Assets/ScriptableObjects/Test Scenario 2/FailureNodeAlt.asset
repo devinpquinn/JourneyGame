@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: You have failed! You must take a different path.
   choices: []
-  diceCheck:
-    requiresRoll: 0
-    difficulty: 0
-    abilityScore: 
-    successNode: {fileID: 0}
-    failureNode: {fileID: 0}
+  events:
+  - eventName: ModifyHealth
+    intValue: -1
+    stringValue: 

@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: You have succeeded! You continue onward.
   choices: []
-  diceCheck:
-    requiresRoll: 0
-    difficulty: 0
-    abilityScore: 
-    successNode: {fileID: 0}
-    failureNode: {fileID: 0}
+  events:
+  - eventName: ModifyVirtue
+    intValue: 1
+    stringValue: Cunning

@@ -38,13 +38,11 @@ public class DialogManager : MonoBehaviour
 		//check if health or morale is 0
 		if (playerCharacter.CurrentHealth <= 0)
 		{
-			GoToNode(deathHealthNode);
-			return;
+			node = deathHealthNode;
 		}
 		if (playerCharacter.CurrentMorale <= 0)
 		{
-			GoToNode(deathMoraleNode);
-			return;
+			node = deathMoraleNode;
 		}
 		
 		currentNode = node;
@@ -55,6 +53,7 @@ public class DialogManager : MonoBehaviour
 			return;
 		}
 
+		ProcessNodeEvents(currentNode);
 		AppendDialogText(currentNode.text); // Ensure this matches your actual property name
 		CreateChoiceButtons();
 	}
@@ -155,6 +154,25 @@ public class DialogManager : MonoBehaviour
 		foreach (Transform child in dialogLogContainer)
 		{
 			Destroy(child.gameObject);
+		}
+	}
+	
+	private void ProcessNodeEvents(DialogNodeSO node)
+	{
+		foreach (DialogEvent dialogEvent in node.events)
+		{
+			switch (dialogEvent.eventName)
+			{
+				case "ModifyHealth":
+					playerCharacter.ModifyHealth(dialogEvent.intValue);
+					break;
+				case "ModifyMorale":
+					playerCharacter.ModifyMorale(dialogEvent.intValue);
+					break;
+				case "ModifyVirtue":
+					playerCharacter.ModifyVirtue(dialogEvent.stringValue, dialogEvent.intValue);
+					break;
+			}
 		}
 	}
 }

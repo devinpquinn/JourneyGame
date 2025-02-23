@@ -11,6 +11,7 @@ public class ScenarioManager : MonoBehaviour
 	private void Start()
 	{
 		LoadScenariosFromResources();
+		dialogManager.playerCharacter.ResetStats();
 		SelectNextScenario();
 	}
 
