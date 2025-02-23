@@ -15,6 +15,9 @@ public class DialogManager : MonoBehaviour
 	public PlayerCharacterSO playerCharacter; // Reference to the player character
 
 	private DialogNodeSO currentNode;
+	
+	public DialogNodeSO deathHealthNode;
+	public DialogNodeSO deathMoraleNode;
 
 	public void StartScenario(ScenarioSO scenario)
 	{
@@ -22,7 +25,7 @@ public class DialogManager : MonoBehaviour
 
 		if (scenario.nodes.Count > 0) // Ensure the scenario has nodes
 		{
-			AdvanceToNode(scenario.nodes[0]); // Start from the first node
+			GoToNode(scenario.nodes[0]); // Start from the first node
 		}
 		else
 		{
@@ -30,8 +33,20 @@ public class DialogManager : MonoBehaviour
 		}
 	}
 
-	public void AdvanceToNode(DialogNodeSO node)
+	public void GoToNode(DialogNodeSO node)
 	{
+		//check if health or morale is 0
+		if (playerCharacter.CurrentHealth <= 0)
+		{
+			GoToNode(deathHealthNode);
+			return;
+		}
+		if (playerCharacter.CurrentMorale <= 0)
+		{
+			GoToNode(deathMoraleNode);
+			return;
+		}
+		
 		currentNode = node;
 
 		if (currentNode == null)
@@ -115,14 +130,14 @@ public class DialogManager : MonoBehaviour
 		}
 		else
 		{
-			AdvanceToNode(choice.nextNode);
+			GoToNode(choice.nextNode);
 		}
 	}
 
 	private void PerformDiceCheck(Choice choice)
 	{
 		int roll = Random.Range(1, 21); // Roll 1d20
-		int abilityScore = playerCharacter.GetVirtueScore(choice.abilityToCheck); // Get the relevant virtue
+		int abilityScore = playerCharacter.GetVirtue(choice.abilityToCheck); // Get the relevant virtue
 
 		bool success = roll < abilityScore || roll == 20; // Roll under virtue = success, 20 always succeeds, 1 always fails
 		bool autoFail = roll == 1; // Roll of 1 always fails
@@ -132,7 +147,7 @@ public class DialogManager : MonoBehaviour
 		string resultText = success ? "<color=green>PASSED</color>" : "<color=red>FAILED</color>";
 		AppendDialogText($"{resultText} - rolled a {roll} against your {abilityScore} ({choice.abilityToCheck}).");
 
-		AdvanceToNode(resultNode);
+		GoToNode(resultNode);
 	}
 
 	public void ClearDialogLog()
