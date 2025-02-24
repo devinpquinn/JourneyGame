@@ -172,6 +172,9 @@ public class DialogManager : MonoBehaviour
 				case "ModifyVirtue":
 					playerCharacter.ModifyVirtue(dialogEvent.stringValue, dialogEvent.intValue);
 					break;
+				case "ModifyProgress":
+					scenarioManager.ModifyProgress(dialogEvent.intValue);
+					break;
 			}
 		}
 	}

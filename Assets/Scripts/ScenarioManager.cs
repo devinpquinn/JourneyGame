@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour
 {
+	public int progress = 0;
 	private List<ScenarioSO> availableScenarios = new List<ScenarioSO>();
-
 	public DialogManager dialogManager; // Assign via Inspector
 	public string scenariosResourceFolder = "Scenarios"; // Folder under Resources
 
@@ -35,6 +35,8 @@ public class ScenarioManager : MonoBehaviour
 	// Selects and starts a random scenario from the available pool, removing it afterward
 	public void SelectNextScenario()
 	{
+		progress++;
+
 		if (availableScenarios.Count == 0)
 		{
 			ResetScenarioPool(); // Optionally, you can stop the game or do something else here
@@ -53,5 +55,16 @@ public class ScenarioManager : MonoBehaviour
 		{
 			Debug.LogWarning("No available scenarios to select!");
 		}
+	}
+
+	public void ModifyProgress(int value)
+	{
+		//min 0
+		if (progress + value < 0)
+		{
+			progress = 0;
+			return;
+		}
+		progress += value;
 	}
 }
