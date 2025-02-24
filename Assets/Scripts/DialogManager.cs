@@ -81,44 +81,48 @@ public class DialogManager : MonoBehaviour
 
 	private void CreateChoiceButtons()
 	{
-		// Clear existing choices
-		foreach (Transform child in choiceContainer)
-		{
-			Destroy(child.gameObject);
-		}
+	    // Clear existing choices
+	    foreach (Transform child in choiceContainer)
+	    {
+	        Destroy(child.gameObject);
+	    }
 
-		foreach (Choice choice in currentNode.choices)
-		{
-			GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
-			TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
-			
-			// Set button text to "Continue" if choice text is empty
-			if (string.IsNullOrEmpty(choice.choiceText))
-			{
-				buttonText.text = "Continue";
-			}
-			else
-			{
-				buttonText.text = choice.choiceText;
-				if (choice.isDiceCheck)
-				{
-					buttonText.text += $" ({choice.abilityToCheck})";
-				}
-			}
+	    foreach (Choice choice in currentNode.choices)
+	    {
+	        GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
+	        TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
+	        
+	        // Set button text to "Continue" if choice text is empty
+	        if (string.IsNullOrEmpty(choice.choiceText))
+	        {
+	            buttonText.text = "Continue";
+	        }
+	        else
+	        {
+	            buttonText.text = choice.choiceText;
+	            if (choice.isDiceCheck)
+	            {
+	                buttonText.text += $" ({choice.abilityToCheck})";
+	            }
+	            if (choice.isLuckCheck)
+	            {
+	                buttonText.text += " (Luck Check)";
+	            }
+	        }
 
-			Button button = choiceButtonObj.GetComponent<Button>();
-			button.onClick.AddListener(() => OnChoiceSelected(choice));
-		}
-		if (currentNode.choices.Count == 0)
-		{
-			//if there are no choices, generate a button that starts the next scenario
-			GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
-			TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
-			buttonText.text = "End Scenario";
-			
-			Button button = choiceButtonObj.GetComponent<Button>();
-			button.onClick.AddListener(() => scenarioManager.SelectNextScenario());
-		}
+	        Button button = choiceButtonObj.GetComponent<Button>();
+	        button.onClick.AddListener(() => OnChoiceSelected(choice));
+	    }
+	    if (currentNode.choices.Count == 0)
+	    {
+	        //if there are no choices, generate a button that starts the next scenario
+	        GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choiceContainer);
+	        TMP_Text buttonText = choiceButtonObj.GetComponentInChildren<TMP_Text>();
+	        buttonText.text = "End Scenario";
+	        
+	        Button button = choiceButtonObj.GetComponent<Button>();
+	        button.onClick.AddListener(() => scenarioManager.SelectNextScenario());
+	    }
 	}
 
 	public void OnChoiceSelected(Choice choice)
@@ -135,18 +139,52 @@ public class DialogManager : MonoBehaviour
 
 	private void PerformDiceCheck(Choice choice)
 	{
-		int roll = Random.Range(1, 21); // Roll 1d20
-		int abilityScore = playerCharacter.GetVirtue(choice.abilityToCheck); // Get the relevant virtue
+	    if (choice.isLuckCheck)
+	    {
+	        PerformLuckCheck(choice);
+	        return;
+	    }
 
-		bool success = roll < abilityScore || roll == 20; // Roll under virtue = success, 20 always succeeds, 1 always fails
-		bool autoFail = roll == 1; // Roll of 1 always fails
+	    int roll = Random.Range(1, 21); // Roll 1d20
+	    int abilityScore = playerCharacter.GetVirtue(choice.abilityToCheck); // Get the relevant virtue
 
-		DialogNodeSO resultNode = (success && !autoFail) ? choice.nextNode : choice.nextNodeOnFailure;
+	    bool success = roll < abilityScore || roll == 20; // Roll under virtue = success, 20 always succeeds, 1 always fails
+	    bool autoFail = roll == 1; // Roll of 1 always fails
 
-		string resultText = success ? "<color=green>PASSED</color>" : "<color=red>FAILED</color>";
-		AppendDialogText($"{resultText} - rolled a {roll} against your {abilityScore} ({choice.abilityToCheck}).");
+	    DialogNodeSO resultNode = (success && !autoFail) ? choice.nextNode : choice.nextNodeOnFailure;
 
-		GoToNode(resultNode);
+	    string resultText = success ? "<color=green>PASSED</color>" : "<color=red>FAILED</color>";
+	    AppendDialogText($"{resultText} - rolled a {roll} against your {abilityScore} ({choice.abilityToCheck}).");
+
+	    GoToNode(resultNode);
+	}
+
+	private void PerformLuckCheck(Choice choice)
+	{
+	    int roll = Random.Range(1, 21); // Roll 1d20
+	    int luckBonus = playerCharacter.Luck; // Get the player's luck bonus
+	    int total = roll + luckBonus;
+
+	    DialogNodeSO resultNode = null;
+	    foreach (var threshold in choice.luckThresholds)
+	    {
+	        if (total <= threshold.threshold)
+	        {
+	            resultNode = threshold.node;
+	            break;
+	        }
+	    }
+
+	    // If no threshold was met, use the last node in the list
+	    if (resultNode == null && choice.luckThresholds.Count > 0)
+	    {
+	        resultNode = choice.luckThresholds[choice.luckThresholds.Count - 1].node;
+	    }
+
+	    string resultText = $"<color=blue>Luck Check</color> - rolled a {roll} + {luckBonus} = {total}";
+	    AppendDialogText(resultText);
+
+	    GoToNode(resultNode);
 	}
 
 	public void ClearDialogLog()

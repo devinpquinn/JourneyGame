@@ -18,6 +18,10 @@ public class Choice
 	public bool isDiceCheck;
 	public string abilityToCheck;
 	public DialogNodeSO nextNodeOnFailure; // The node to go to if the roll fails
+
+	// Fields for luck check
+	public bool isLuckCheck;
+	public List<LuckThreshold> luckThresholds;
 }
 
 [System.Serializable]
@@ -26,4 +30,11 @@ public class DialogEvent
 	public string eventName;
 	public int intValue;
 	public string stringValue;
+}
+
+[System.Serializable]
+public class LuckThreshold
+{
+	public int threshold;
+	public DialogNodeSO node;
 }
