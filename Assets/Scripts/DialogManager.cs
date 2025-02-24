@@ -23,14 +23,7 @@ public class DialogManager : MonoBehaviour
 	{
 		ClearDialogLog();
 
-		if (scenario.nodes.Count > 0) // Ensure the scenario has nodes
-		{
-			GoToNode(scenario.nodes[0]); // Start from the first node
-		}
-		else
-		{
-			Debug.LogWarning("Scenario has no dialog nodes!");
-		}
+		GoToNode(scenario.startNode);
 	}
 
 	public void GoToNode(DialogNodeSO node)

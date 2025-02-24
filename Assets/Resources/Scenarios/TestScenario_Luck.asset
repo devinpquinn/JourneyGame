@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7de6c3a78cf09459a679a39b003b0e, type: 3}
   m_Name: TestScenario_Luck
   m_EditorClassIdentifier: 
-  scenarioTitle: 
-  nodes:
-  - {fileID: 11400000, guid: bb0fa085ce6ff964abc0c726d2906cf4, type: 2}
+  scenarioTitle: Luck Test Scenario
+  startNode: {fileID: 11400000, guid: bb0fa085ce6ff964abc0c726d2906cf4, type: 2}

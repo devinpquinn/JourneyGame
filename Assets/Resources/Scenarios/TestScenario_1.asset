@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: TestScenario_1
   m_EditorClassIdentifier: 
   scenarioTitle: Test Scenario 1
-  nodes:
-  - {fileID: 11400000, guid: da7b635ff36e03541afc9b31689bd850, type: 2}
+  startNode: {fileID: 11400000, guid: da7b635ff36e03541afc9b31689bd850, type: 2}

@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7de6c3a78cf09459a679a39b003b0e, type: 3}
   m_Name: TestScenario_2
   m_EditorClassIdentifier: 
-  scenarioTitle: Test Scenario 1
-  nodes:
-  - {fileID: 11400000, guid: e59fab015a0494e4f9a61adeeef0830d, type: 2}
+  scenarioTitle: Test Scenario 2
+  startNode: {fileID: 11400000, guid: e59fab015a0494e4f9a61adeeef0830d, type: 2}

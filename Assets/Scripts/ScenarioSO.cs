@@ -5,5 +5,5 @@ using UnityEngine;
 public class ScenarioSO : ScriptableObject
 {
     public string scenarioTitle;
-    public List<DialogNodeSO> nodes;
+    public DialogNodeSO startNode;
 }
