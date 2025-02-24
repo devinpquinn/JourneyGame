@@ -9,17 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6b16aa75fce23e49aceb9d8a8b41485, type: 3}
-  m_Name: PlayerCharacter
+  m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
+  m_Name: Unlucky
   m_EditorClassIdentifier: 
-  Might: 10
-  Mettle: 10
-  Courage: 10
-  Cunning: 10
-  Goodness: 10
-  Grace: 10
-  MaxHealth: 3
-  MaxMorale: 3
-  Luck: 0
-  CurrentHealth: 3
-  CurrentMorale: 3
+  text: You were unlucky!
+  choices: []
+  events: []

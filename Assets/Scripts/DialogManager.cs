@@ -106,7 +106,7 @@ public class DialogManager : MonoBehaviour
 	            }
 	            if (choice.isLuckCheck)
 	            {
-	                buttonText.text += " (Luck Check)";
+	                buttonText.text += " (Luck)";
 	            }
 	        }
 
@@ -131,6 +131,10 @@ public class DialogManager : MonoBehaviour
 		{
 			PerformDiceCheck(choice);
 		}
+		else if (choice.isLuckCheck)
+		{
+			PerformLuckCheck(choice);
+		}
 		else
 		{
 			GoToNode(choice.nextNode);
@@ -139,12 +143,6 @@ public class DialogManager : MonoBehaviour
 
 	private void PerformDiceCheck(Choice choice)
 	{
-	    if (choice.isLuckCheck)
-	    {
-	        PerformLuckCheck(choice);
-	        return;
-	    }
-
 	    int roll = Random.Range(1, 21); // Roll 1d20
 	    int abilityScore = playerCharacter.GetVirtue(choice.abilityToCheck); // Get the relevant virtue
 
@@ -168,10 +166,9 @@ public class DialogManager : MonoBehaviour
 	    DialogNodeSO resultNode = null;
 	    foreach (var threshold in choice.luckThresholds)
 	    {
-	        if (total <= threshold.threshold)
+	        if (total >= threshold.threshold)
 	        {
 	            resultNode = threshold.node;
-	            break;
 	        }
 	    }
 
@@ -181,7 +178,7 @@ public class DialogManager : MonoBehaviour
 	        resultNode = choice.luckThresholds[choice.luckThresholds.Count - 1].node;
 	    }
 
-	    string resultText = $"<color=blue>Luck Check</color> - rolled a {roll} + {luckBonus} = {total}";
+	    string resultText = $"<color=blue>Luck</color> - rolled a {roll} + {luckBonus} = {total}";
 	    AppendDialogText(resultText);
 
 	    GoToNode(resultNode);
@@ -212,6 +209,9 @@ public class DialogManager : MonoBehaviour
 					break;
 				case "ModifyProgress":
 					scenarioManager.ModifyProgress(dialogEvent.intValue);
+					break;
+				case "ModifyLuck":
+					playerCharacter.ModifyLuck(dialogEvent.intValue);
 					break;
 			}
 		}

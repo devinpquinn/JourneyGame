@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb1314107f174a40be3625ba4723585, type: 3}
+  m_Name: StartNode_Luck
+  m_EditorClassIdentifier: 
+  text: Time to test your luck!
+  choices:
+  - choiceText: Test Your Luck
+    nextNode: {fileID: 0}
+    isDiceCheck: 0
+    abilityToCheck: 
+    nextNodeOnFailure: {fileID: 0}
+    isLuckCheck: 1
+    luckThresholds:
+    - threshold: 0
+      node: {fileID: 11400000, guid: 92184e89ef8b64043b1cd80de6e087c1, type: 2}
+    - threshold: 7
+      node: {fileID: 11400000, guid: ddac7480a77748c4f8b710f90c6434bc, type: 2}
+    - threshold: 14
+      node: {fileID: 11400000, guid: efb7a562e43d74147b619850b5cf63a9, type: 2}
+  events: []

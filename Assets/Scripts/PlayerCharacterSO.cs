@@ -55,6 +55,8 @@ public class PlayerCharacterSO : ScriptableObject
 	public void ModifyLuck(int value)
 	{
 		Luck += value;
+
+		Debug.Log("Luck: " + Luck);
 	}
 	
 	public void ModifyHealth(int value)
