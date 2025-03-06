@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 52146647b50716346bb853261a831721
+guid: f447e881a56c231438c6a5afb6821d77
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,6 +8,7 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
+  fontName: pix M 8pt
   fontNames:
   - pix M 8pt
   fallbackFontReferences: []
