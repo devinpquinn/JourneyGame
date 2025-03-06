@@ -791,7 +791,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -923,6 +923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57509141b461944694a7dd72a960c3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progress: 0
   dialogManager: {fileID: 310342971}
   scenariosResourceFolder: Scenarios
 --- !u!4 &1722952341
