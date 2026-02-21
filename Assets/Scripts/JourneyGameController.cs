@@ -78,7 +78,7 @@ public class JourneyGameController : MonoBehaviour
     private void Start()
     {
         LoadRegionEvents();
-        StartNewRound(showInterRoundMessage: false);
+        StartNewRound(showInterRoundMessage: true);
     }
 
     private void LoadRegionEvents()
@@ -391,10 +391,7 @@ public class JourneyGameController : MonoBehaviour
         RebuildDeck();
 
         gameState = GameState.InterRound;
-        eventTitleText.text = "Camp";
-
-        string restMessage = "You rest up for your next attempt.";
-        string bonusLine;
+        eventTitleText.text = "Round Start";
 
         if (roundsCompleted % 4 == 0)
         {
@@ -402,22 +399,19 @@ public class JourneyGameController : MonoBehaviour
             if (boostHealth)
             {
                 Hero.AddMaxHealth(1);
-                bonusLine = "+1 Max Health";
             }
             else
             {
                 Hero.AddMaxMorale(1);
-                bonusLine = "+1 Max Morale";
             }
         }
         else
         {
             HeroAttribute attribute = GetRandomAttribute();
-            int actualDelta = Hero.AddAttribute(attribute, 5);
-            bonusLine = FormatEffectLine(actualDelta, HeroNames.Attribute(attribute));
+            Hero.AddAttribute(attribute, 5);
         }
 
-        eventBodyText.text = restMessage + "\n\n" + bonusLine;
+        eventBodyText.text = "You set out into " + regionName + ".";
         RefreshAllUi();
     }
 
@@ -447,8 +441,8 @@ public class JourneyGameController : MonoBehaviour
         if (showInterRoundMessage)
         {
             gameState = GameState.InterRound;
-            eventTitleText.text = "Camp";
-            eventBodyText.text = "You rest up for your next attempt.";
+            eventTitleText.text = "Round Start";
+            eventBodyText.text = "You set out into " + regionName + ".";
             RefreshAllUi();
             return;
         }
