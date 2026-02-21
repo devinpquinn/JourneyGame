@@ -257,7 +257,7 @@ public class JourneyGameController : MonoBehaviour
         if (prependTestResult)
         {
             string passText = lastTestPassed ? "passed" : "failed";
-            lines.Add("You " + passText + " a Test of " + HeroNames.Attribute(lastTestAttribute) + "!");
+            lines.Add(ToItalics("You " + passText + " a Test of " + HeroNames.Attribute(lastTestAttribute) + "!"));
             lines.Add(string.Empty);
             prependTestResult = false;
             lastTestAttribute = HeroAttribute.None;
@@ -281,7 +281,7 @@ public class JourneyGameController : MonoBehaviour
         if (node.HasTest)
         {
             lines.Add(string.Empty);
-            lines.Add("You face a Test of " + HeroNames.Attribute(node.TestAttribute) + "...");
+            lines.Add(ToItalics("You face a Test of " + HeroNames.Attribute(node.TestAttribute) + "..."));
         }
 
         eventTitleText.text = currentEvent != null ? currentEvent.Title : regionName;
@@ -303,7 +303,7 @@ public class JourneyGameController : MonoBehaviour
                 continue;
             }
 
-            effectLines.Add(FormatEffectLine(actualDelta, HeroNames.EffectTarget(effect.Target)));
+            effectLines.Add(ToItalics(FormatEffectLine(actualDelta, HeroNames.EffectTarget(effect.Target))));
         }
 
         if (Hero.CurrentHealth <= 0)
@@ -539,5 +539,10 @@ public class JourneyGameController : MonoBehaviour
 
         string sign = amount > 0 ? "+" : "-";
         return sign + Mathf.Abs(amount) + " " + label;
+    }
+
+    private static string ToItalics(string value)
+    {
+        return "<i>" + value + "</i>";
     }
 }
