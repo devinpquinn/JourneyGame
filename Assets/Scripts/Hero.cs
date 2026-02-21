@@ -2,6 +2,9 @@ using UnityEngine;
 
 public static class Hero
 {
+    public const int MinAttributePercent = 5;
+    public const int MaxAttributePercent = 95;
+
     public static int CurrentHealth = 3;
     public static int MaxHealth = 3;
     public static int CurrentMorale = 3;
@@ -55,7 +58,7 @@ public static class Hero
     public static int AddAttribute(HeroAttribute attribute, int amount)
     {
         int before = GetAttributeValue(attribute);
-        int after = Mathf.Clamp(before + amount, 0, 100);
+        int after = Mathf.Clamp(before + amount, MinAttributePercent, MaxAttributePercent);
 
         switch (attribute)
         {
