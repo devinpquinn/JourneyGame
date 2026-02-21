@@ -297,13 +297,8 @@ public class JourneyGameController : MonoBehaviour
         for (int index = 0; index < effects.Count; index++)
         {
             EventEffect effect = effects[index];
-            int actualDelta = ApplyEffect(effect.Target, effect.Amount);
-            if (actualDelta == 0)
-            {
-                continue;
-            }
-
-            effectLines.Add(ToItalics(FormatEffectLine(actualDelta, HeroNames.EffectTarget(effect.Target))));
+            ApplyEffect(effect.Target, effect.Amount);
+            effectLines.Add(ToItalics(FormatEffectLine(effect.Amount, HeroNames.EffectTarget(effect.Target))));
         }
 
         if (Hero.CurrentHealth <= 0)
