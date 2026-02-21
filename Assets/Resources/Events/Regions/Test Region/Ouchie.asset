@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5e25128dfebc48bc0c0c689f171de, type: 3}
   m_Name: Ouchie
   m_EditorClassIdentifier: Assembly-CSharp::RegionEventData
-  title: Untitled Event
+  title: Ouchie
   repeatable: 1
   startNodeId: start
-  nodes: []
+  nodes:
+  - nodeId: start
+    bodyText: Yikes! You stepped on something sharp.
+    effects:
+    - target: 5
+      amount: -1
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 

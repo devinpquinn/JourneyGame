@@ -12,7 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5e25128dfebc48bc0c0c689f171de, type: 3}
   m_Name: LuckTest
   m_EditorClassIdentifier: Assembly-CSharp::RegionEventData
-  title: Untitled Event
+  title: Test Your Luck
   repeatable: 1
   startNodeId: start
-  nodes: []
+  nodes:
+  - nodeId: start
+    bodyText: Step right up and spin the wheel!
+    effects: []
+    testAttribute: 5
+    successNodeId: win
+    failureNodeId: lose
+    nextNodeId: 
+  - nodeId: win
+    bodyText: Great job, you're a winner!
+    effects:
+    - target: 5
+      amount: 1
+    - target: 6
+      amount: 1
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 
+  - nodeId: lose
+    bodyText: Too bad-- better luck next time!
+    effects:
+    - target: 5
+      amount: -1
+    - target: 6
+      amount: -1
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 
