@@ -18424,7 +18424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf4c0bafa9d5474599fb2b43577659a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JourneyGameController
-  regionName: Starter Region
+  regionName: Test Region
   progressToClear: 20
   eventTitleText: {fileID: 439541042}
   eventBodyText: {fileID: 1894392929}
@@ -18439,7 +18439,6 @@ MonoBehaviour:
   moraleLabelText: {fileID: 144033279}
   moraleFillImage: {fileID: 241056525}
   regionLabelText: {fileID: 2143445787}
-  progressLabelText: {fileID: 0}
   progressFillImage: {fileID: 947299396}
 --- !u!4 &1570384830
 Transform:

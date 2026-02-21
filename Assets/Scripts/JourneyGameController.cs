@@ -44,7 +44,6 @@ public class JourneyGameController : MonoBehaviour
 
     [Header("Region Panel")]
     [SerializeField] private TMP_Text regionLabelText;
-    [SerializeField] private TMP_Text progressLabelText;
     [SerializeField] private Image progressFillImage;
 
     private readonly List<RegionEventData> allRegionEvents = new List<RegionEventData>();
@@ -512,11 +511,6 @@ public class JourneyGameController : MonoBehaviour
         if (regionLabelText != null)
         {
             regionLabelText.text = regionName;
-        }
-
-        if (progressLabelText != null)
-        {
-            progressLabelText.text = progress + "/" + progressToClear;
         }
 
         if (progressFillImage != null)
