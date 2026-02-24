@@ -9,7 +9,8 @@ public class JourneyGameController : MonoBehaviour
     {
         EventNode,
         RoundEnd,
-        InterRound
+        InterRound,
+        RoundStart
     }
 
     private enum RoundEndType
@@ -132,6 +133,9 @@ public class JourneyGameController : MonoBehaviour
                 HandleRoundEndAcknowledge();
                 break;
             case GameState.InterRound:
+                ShowRoundStartMessage();
+                break;
+            case GameState.RoundStart:
                 BeginNextEvent();
                 break;
         }
@@ -391,7 +395,10 @@ public class JourneyGameController : MonoBehaviour
         RebuildDeck();
 
         gameState = GameState.InterRound;
-        eventTitleText.text = "Round Start";
+        eventTitleText.text = "Camp";
+
+        string restMessage = "You rest up for your next attempt.";
+        string bonusLine;
 
         if (roundsCompleted % 4 == 0)
         {
@@ -399,19 +406,22 @@ public class JourneyGameController : MonoBehaviour
             if (boostHealth)
             {
                 Hero.AddMaxHealth(1);
+                bonusLine = "+1 Max Health";
             }
             else
             {
                 Hero.AddMaxMorale(1);
+                bonusLine = "+1 Max Morale";
             }
         }
         else
         {
             HeroAttribute attribute = GetRandomAttribute();
-            Hero.AddAttribute(attribute, 5);
+            int actualDelta = Hero.AddAttribute(attribute, 5);
+            bonusLine = FormatEffectLine(actualDelta, HeroNames.Attribute(attribute));
         }
 
-        eventBodyText.text = "You set out into " + regionName + ".";
+        eventBodyText.text = restMessage + "\n\n" + bonusLine;
         RefreshAllUi();
     }
 
@@ -440,14 +450,19 @@ public class JourneyGameController : MonoBehaviour
 
         if (showInterRoundMessage)
         {
-            gameState = GameState.InterRound;
-            eventTitleText.text = "Round Start";
-            eventBodyText.text = "You set out into " + regionName + ".";
-            RefreshAllUi();
+            ShowRoundStartMessage();
             return;
         }
 
         BeginNextEvent();
+    }
+
+    private void ShowRoundStartMessage()
+    {
+        gameState = GameState.RoundStart;
+        eventTitleText.text = "Round Start";
+        eventBodyText.text = "You set out into " + regionName + ".";
+        RefreshAllUi();
     }
 
     private void RefreshAllUi()
