@@ -82,6 +82,39 @@ public class JourneyGameController : MonoBehaviour
         StartNewRound(showInterRoundMessage: true);
     }
 
+    private void Update()
+    {
+        if (!WasOkayHotkeyPressed())
+        {
+            return;
+        }
+
+        TryPressOkayButton();
+    }
+
+    private bool WasOkayHotkeyPressed()
+    {
+        return Input.GetKeyDown(KeyCode.Space)
+               || Input.GetKeyDown(KeyCode.Return)
+               || Input.GetKeyDown(KeyCode.KeypadEnter)
+               || Input.GetKeyDown(KeyCode.O);
+    }
+
+    private void TryPressOkayButton()
+    {
+        if (okayButton == null)
+        {
+            return;
+        }
+
+        if (!okayButton.isActiveAndEnabled || !okayButton.gameObject.activeInHierarchy || !okayButton.interactable)
+        {
+            return;
+        }
+
+        okayButton.onClick.Invoke();
+    }
+
     private void LoadRegionEvents()
     {
         allRegionEvents.Clear();
