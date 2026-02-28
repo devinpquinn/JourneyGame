@@ -43,9 +43,8 @@ public class JourneyGameController : MonoBehaviour
     [SerializeField] private TMP_Text moraleLabelText;
     [SerializeField] private Image moraleFillImage;
 
-    [Header("Region Panel")]
-    [SerializeField] private TMP_Text regionLabelText;
-    [SerializeField] private Image progressFillImage;
+    [Header("Region")]
+    [SerializeField] private TMP_Text regionProgressText;
 
     private readonly List<RegionEventData> allRegionEvents = new List<RegionEventData>();
     private readonly List<RegionEventData> eventDeck = new List<RegionEventData>();
@@ -545,14 +544,11 @@ public class JourneyGameController : MonoBehaviour
             moraleFillImage.fillAmount = Hero.MaxMorale > 0 ? (float)Hero.CurrentMorale / Hero.MaxMorale : 0f;
         }
 
-        if (regionLabelText != null)
+        if (regionProgressText != null)
         {
-            regionLabelText.text = regionName;
-        }
-
-        if (progressFillImage != null)
-        {
-            progressFillImage.fillAmount = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
+            float normalizedProgress = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
+            int percentage = Mathf.RoundToInt(normalizedProgress * 100f);
+            regionProgressText.text = regionName + " - " + percentage + "%";
         }
     }
 
