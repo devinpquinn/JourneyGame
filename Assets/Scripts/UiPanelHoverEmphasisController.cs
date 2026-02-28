@@ -260,6 +260,12 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
         for (int index = 0; index < frontPanels.Length; index++)
         {
             bool isHovered = index == hoveredFrontIndex;
+
+            if (isHovered)
+            {
+                frontPanels[index].PanelRect.SetAsLastSibling();
+            }
+
             ApplyState(frontPanels[index], emphasize: isHovered, allowScaleEmphasis: true, instant: instant);
         }
 

@@ -2216,6 +2216,7 @@ MonoBehaviour:
     inactiveAlpha: 0.7
   emphasizedAlpha: 1
   emphasizedScale: 1.01
+  emphasizedSiblingIndex: 4
   transitionDuration: 0.15
   transitionCurve:
     serializedVersion: 2
