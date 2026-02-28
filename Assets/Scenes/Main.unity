@@ -5002,6 +5002,9 @@ MonoBehaviour:
   moraleLabelText: {fileID: 144033279}
   moraleFillImage: {fileID: 241056525}
   regionProgressText: {fileID: 998188644}
+  levelLabelText: {fileID: 2143445787}
+  levelFillImage: {fileID: 947299396}
+  xpRequiredForFirstLevelUp: 10
 --- !u!4 &1570384830
 Transform:
   m_ObjectHideFlags: 0

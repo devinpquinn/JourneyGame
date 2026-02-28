@@ -9,6 +9,7 @@ public class JourneyGameController : MonoBehaviour
     {
         EventNode,
         RoundEnd,
+        LevelUp,
         InterRound,
         RoundStart
     }
@@ -46,6 +47,11 @@ public class JourneyGameController : MonoBehaviour
     [Header("Region")]
     [SerializeField] private TMP_Text regionProgressText;
 
+    [Header("Level")]
+    [SerializeField] private TMP_Text levelLabelText;
+    [SerializeField] private Image levelFillImage;
+    [SerializeField] private int xpRequiredForFirstLevelUp = 10;
+
     private readonly List<RegionEventData> allRegionEvents = new List<RegionEventData>();
     private readonly List<RegionEventData> eventDeck = new List<RegionEventData>();
     private readonly HashSet<string> seenNonRepeatableEventIds = new HashSet<string>();
@@ -63,6 +69,11 @@ public class JourneyGameController : MonoBehaviour
     private GameState gameState;
     private int progress;
     private int roundsCompleted;
+    private int currentLevel = 1;
+    private int currentXp;
+    private int xpRequiredForNextLevel;
+    private bool levelUpAwardedMaxVital;
+    private string levelUpAwardText;
 
     private void Awake()
     {
@@ -77,6 +88,7 @@ public class JourneyGameController : MonoBehaviour
 
     private void Start()
     {
+        xpRequiredForNextLevel = Mathf.Max(1, xpRequiredForFirstLevelUp);
         LoadRegionEvents();
         StartNewRound(showInterRoundMessage: true);
     }
@@ -164,6 +176,9 @@ public class JourneyGameController : MonoBehaviour
             case GameState.RoundEnd:
                 HandleRoundEndAcknowledge();
                 break;
+            case GameState.LevelUp:
+                HandleLevelUpAcknowledge();
+                break;
             case GameState.InterRound:
                 ShowRoundStartMessage();
                 break;
@@ -235,6 +250,13 @@ public class JourneyGameController : MonoBehaviour
     private void CompleteCurrentEvent()
     {
         AddProgress(1);
+
+        GainExperience(1);
+        if (gameState == GameState.LevelUp)
+        {
+            return;
+        }
+
         if (pendingRoundEndType == RoundEndType.Win)
         {
             ShowRoundEnd(RoundEndType.Win);
@@ -428,32 +450,74 @@ public class JourneyGameController : MonoBehaviour
 
         gameState = GameState.InterRound;
         eventTitleText.text = "Camp";
+        eventBodyText.text = "You rest up for your next attempt.";
+        RefreshAllUi();
+    }
 
-        string restMessage = "You rest up for your next attempt.";
-        string bonusLine;
+    private void HandleLevelUpAcknowledge()
+    {
+        if (pendingRoundEndType == RoundEndType.Win)
+        {
+            ShowRoundEnd(RoundEndType.Win);
+            return;
+        }
 
-        if (roundsCompleted % 4 == 0)
+        BeginNextEvent();
+    }
+
+    private void GainExperience(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        currentXp += amount;
+        RefreshAllUi();
+
+        if (currentXp < xpRequiredForNextLevel)
+        {
+            return;
+        }
+
+        LevelUp();
+    }
+
+    private void LevelUp()
+    {
+        currentLevel++;
+        currentXp = 0;
+
+        bool awardMaxVital = currentLevel % 5 == 0;
+        levelUpAwardedMaxVital = awardMaxVital;
+
+        if (awardMaxVital)
         {
             bool boostHealth = Random.value < 0.5f;
             if (boostHealth)
             {
                 Hero.AddMaxHealth(1);
-                bonusLine = "+1 Max Health";
+                levelUpAwardText = "Your Max Health has increased by 1.";
             }
             else
             {
                 Hero.AddMaxMorale(1);
-                bonusLine = "+1 Max Morale";
+                levelUpAwardText = "Your Max Morale has increased by 1.";
             }
         }
         else
         {
             HeroAttribute attribute = GetRandomAttribute();
             int actualDelta = Hero.AddAttribute(attribute, 5);
-            bonusLine = FormatEffectLine(actualDelta, HeroNames.Attribute(attribute));
+            int displayedDelta = Mathf.Abs(actualDelta);
+            levelUpAwardText = "Your " + HeroNames.Attribute(attribute) + " has increased by " + displayedDelta + ".";
         }
 
-        eventBodyText.text = restMessage + "\n\n" + bonusLine;
+        xpRequiredForNextLevel++;
+
+        gameState = GameState.LevelUp;
+        eventTitleText.text = "Level Up";
+        eventBodyText.text = "You are now Level " + currentLevel + ".\n\n" + levelUpAwardText;
         RefreshAllUi();
     }
 
@@ -549,6 +613,16 @@ public class JourneyGameController : MonoBehaviour
             float normalizedProgress = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
             int percentage = Mathf.RoundToInt(normalizedProgress * 100f);
             regionProgressText.text = regionName + " - " + percentage + "%";
+        }
+
+        if (levelLabelText != null)
+        {
+            levelLabelText.text = "Level " + currentLevel + " - " + currentXp + "/" + xpRequiredForNextLevel + " XP";
+        }
+
+        if (levelFillImage != null)
+        {
+            levelFillImage.fillAmount = xpRequiredForNextLevel > 0 ? Mathf.Clamp01((float)currentXp / xpRequiredForNextLevel) : 0f;
         }
     }
 
