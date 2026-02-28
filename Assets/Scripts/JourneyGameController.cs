@@ -617,7 +617,7 @@ public class JourneyGameController : MonoBehaviour
 
         if (levelLabelText != null)
         {
-            levelLabelText.text = "Level " + currentLevel + " - " + currentXp + "/" + xpRequiredForNextLevel + " XP";
+            levelLabelText.text = "Level " + currentLevel;
         }
 
         if (levelFillImage != null)
