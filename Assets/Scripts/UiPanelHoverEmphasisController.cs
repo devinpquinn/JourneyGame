@@ -22,6 +22,10 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
         private float transitionStartAlpha;
         private float transitionTargetAlpha;
         private float currentAlpha;
+        private Vector3 baseScale;
+        private Vector3 transitionStartScale;
+        private Vector3 transitionTargetScale;
+        private Vector3 currentScale;
         private float transitionElapsed;
         private bool isTransitioning;
 
@@ -41,27 +45,45 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
         public void Initialize()
         {
             currentAlpha = panelCanvasGroup != null ? panelCanvasGroup.alpha : inactiveAlpha;
+            baseScale = panelRect != null ? panelRect.localScale : Vector3.one;
+            currentScale = baseScale;
             transitionStartAlpha = currentAlpha;
             transitionTargetAlpha = currentAlpha;
+            transitionStartScale = currentScale;
+            transitionTargetScale = currentScale;
             transitionElapsed = 0f;
             isTransitioning = false;
         }
 
-        public void SetState(bool emphasize, float emphasizedAlpha, bool instant)
+        public void SetState(bool emphasize, float emphasizedAlpha, float emphasizedScaleMultiplier, bool allowScaleEmphasis, bool instant)
         {
             float targetAlpha = emphasize ? emphasizedAlpha : inactiveAlpha;
             Sprite targetSprite = emphasize ? activeSprite : inactiveSprite;
+            Vector3 targetScale = baseScale;
+
+            if (allowScaleEmphasis && emphasize)
+            {
+                targetScale = baseScale * emphasizedScaleMultiplier;
+            }
 
             if (panelImage != null)
             {
                 panelImage.sprite = targetSprite;
             }
 
-            if (panelCanvasGroup == null || instant)
+            if (panelCanvasGroup == null && panelRect == null)
+            {
+                return;
+            }
+
+            if (instant)
             {
                 currentAlpha = targetAlpha;
                 transitionStartAlpha = targetAlpha;
                 transitionTargetAlpha = targetAlpha;
+                currentScale = targetScale;
+                transitionStartScale = targetScale;
+                transitionTargetScale = targetScale;
                 transitionElapsed = 0f;
                 isTransitioning = false;
 
@@ -70,29 +92,49 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
                     panelCanvasGroup.alpha = targetAlpha;
                 }
 
+                if (panelRect != null)
+                {
+                    panelRect.localScale = targetScale;
+                }
+
                 return;
             }
 
-            if (Mathf.Approximately(currentAlpha, targetAlpha))
+            if (Mathf.Approximately(currentAlpha, targetAlpha) && currentScale == targetScale)
             {
                 currentAlpha = targetAlpha;
                 transitionStartAlpha = targetAlpha;
                 transitionTargetAlpha = targetAlpha;
+                currentScale = targetScale;
+                transitionStartScale = targetScale;
+                transitionTargetScale = targetScale;
                 transitionElapsed = 0f;
                 isTransitioning = false;
-                panelCanvasGroup.alpha = targetAlpha;
+
+                if (panelCanvasGroup != null)
+                {
+                    panelCanvasGroup.alpha = targetAlpha;
+                }
+
+                if (panelRect != null)
+                {
+                    panelRect.localScale = targetScale;
+                }
+
                 return;
             }
 
             transitionStartAlpha = currentAlpha;
             transitionTargetAlpha = targetAlpha;
+            transitionStartScale = currentScale;
+            transitionTargetScale = targetScale;
             transitionElapsed = 0f;
             isTransitioning = true;
         }
 
         public void TickTransition(float deltaTime, float duration, AnimationCurve curve)
         {
-            if (!isTransitioning || panelCanvasGroup == null)
+            if (!isTransitioning)
             {
                 return;
             }
@@ -100,7 +142,18 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
             if (duration <= 0f)
             {
                 currentAlpha = transitionTargetAlpha;
-                panelCanvasGroup.alpha = currentAlpha;
+                currentScale = transitionTargetScale;
+
+                if (panelCanvasGroup != null)
+                {
+                    panelCanvasGroup.alpha = currentAlpha;
+                }
+
+                if (panelRect != null)
+                {
+                    panelRect.localScale = currentScale;
+                }
+
                 isTransitioning = false;
                 return;
             }
@@ -110,12 +163,33 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
             float easedTime = curve != null ? curve.Evaluate(normalizedTime) : normalizedTime;
 
             currentAlpha = Mathf.Lerp(transitionStartAlpha, transitionTargetAlpha, easedTime);
-            panelCanvasGroup.alpha = currentAlpha;
+            currentScale = Vector3.Lerp(transitionStartScale, transitionTargetScale, easedTime);
+
+            if (panelCanvasGroup != null)
+            {
+                panelCanvasGroup.alpha = currentAlpha;
+            }
+
+            if (panelRect != null)
+            {
+                panelRect.localScale = currentScale;
+            }
 
             if (normalizedTime >= 1f)
             {
                 currentAlpha = transitionTargetAlpha;
-                panelCanvasGroup.alpha = currentAlpha;
+                currentScale = transitionTargetScale;
+
+                if (panelCanvasGroup != null)
+                {
+                    panelCanvasGroup.alpha = currentAlpha;
+                }
+
+                if (panelRect != null)
+                {
+                    panelRect.localScale = currentScale;
+                }
+
                 isTransitioning = false;
             }
         }
@@ -127,6 +201,7 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
 
     [Header("Visual States")]
     [SerializeField, Range(0f, 1f)] private float emphasizedAlpha = 1f;
+    [SerializeField, Min(0f)] private float emphasizedScale = 1.1f;
     [SerializeField, Min(0f)] private float transitionDuration = 0.15f;
     [SerializeField] private AnimationCurve transitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
@@ -185,11 +260,11 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
         for (int index = 0; index < frontPanels.Length; index++)
         {
             bool isHovered = index == hoveredFrontIndex;
-            ApplyState(frontPanels[index], emphasize: isHovered, instant: instant);
+            ApplyState(frontPanels[index], emphasize: isHovered, allowScaleEmphasis: true, instant: instant);
         }
 
         bool shouldEmphasizeBackground = hoveredFrontIndex < 0;
-        ApplyState(backgroundPanel, emphasize: shouldEmphasizeBackground, instant: instant);
+        ApplyState(backgroundPanel, emphasize: shouldEmphasizeBackground, allowScaleEmphasis: false, instant: instant);
     }
 
     private void TickTransitions()
@@ -211,14 +286,14 @@ public class UiPanelHoverEmphasisController : MonoBehaviour
         }
     }
 
-    private void ApplyState(PanelVisual panel, bool emphasize, bool instant)
+    private void ApplyState(PanelVisual panel, bool emphasize, bool allowScaleEmphasis, bool instant)
     {
         if (panel == null)
         {
             return;
         }
 
-        panel.SetState(emphasize, emphasizedAlpha, instant);
+        panel.SetState(emphasize, emphasizedAlpha, emphasizedScale, allowScaleEmphasis, instant);
     }
 
     private int GetHoveredFrontPanelIndex()
