@@ -2213,10 +2213,9 @@ MonoBehaviour:
     panelCanvasGroup: {fileID: 19836543}
     activeSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
     inactiveSprite: {fileID: 21300000, guid: 88fdffe907264de4c9bc70ac412975dc, type: 3}
-    inactiveAlpha: 0.7
+    inactiveAlpha: 0.75
   emphasizedAlpha: 1
   emphasizedScale: 1.01
-  emphasizedSiblingIndex: 4
   transitionDuration: 0.15
   transitionCurve:
     serializedVersion: 2

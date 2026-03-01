@@ -391,6 +391,8 @@ public class JourneyGameController : MonoBehaviour
                 return Hero.AddMorale(amount);
             case HeroEffectTarget.Progress:
                 return AddProgress(amount);
+            case HeroEffectTarget.Xp:
+                return AddExperience(amount);
             default:
                 return 0;
         }
@@ -465,22 +467,42 @@ public class JourneyGameController : MonoBehaviour
         BeginNextEvent();
     }
 
-    private void GainExperience(int amount)
+    private int AddExperience(int amount)
+    {
+        if (amount == 0)
+        {
+            return 0;
+        }
+
+        if (amount > 0)
+        {
+            return GainExperience(amount);
+        }
+
+        int before = currentXp;
+        currentXp = Mathf.Max(0, currentXp + amount);
+        RefreshAllUi();
+        return currentXp - before;
+    }
+
+    private int GainExperience(int amount)
     {
         if (amount <= 0)
         {
-            return;
+            return 0;
         }
 
+        int before = currentXp;
         currentXp += amount;
         RefreshAllUi();
 
         if (currentXp < xpRequiredForNextLevel)
         {
-            return;
+            return currentXp - before;
         }
 
         LevelUp();
+        return currentXp - before;
     }
 
     private void LevelUp()

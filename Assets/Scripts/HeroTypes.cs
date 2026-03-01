@@ -17,7 +17,8 @@ public enum HeroEffectTarget
     Luck = 4,
     Health = 5,
     Morale = 6,
-    Progress = 7
+    Progress = 7,
+    Xp = 8
 }
 
 public static class HeroNames
@@ -61,6 +62,8 @@ public static class HeroNames
                 return "Morale";
             case HeroEffectTarget.Progress:
                 return "Progress";
+            case HeroEffectTarget.Xp:
+                return "XP";
             default:
                 return "Unknown";
         }
