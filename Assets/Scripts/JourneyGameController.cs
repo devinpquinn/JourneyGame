@@ -761,9 +761,16 @@ public class JourneyGameController : MonoBehaviour
 
         if (regionProgressText != null)
         {
-            float normalizedProgress = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
-            int percentage = Mathf.RoundToInt(normalizedProgress * 100f);
-            regionProgressText.text = regionName + " - " + percentage + "%";
+            if (gameState == GameState.EventNode)
+            {
+                float normalizedProgress = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
+                int percentage = Mathf.RoundToInt(normalizedProgress * 100f);
+                regionProgressText.text = regionName + " - " + percentage + "%";
+            }
+            else
+            {
+                regionProgressText.text = "Camp";
+            }
         }
 
         if (levelLabelText != null)
