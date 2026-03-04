@@ -7,7 +7,7 @@ public class RegionEventData : ScriptableObject
 {
     [SerializeField] private string title = "Untitled Event";
     [SerializeField] private bool repeatable = true;
-    [SerializeField] private string startNodeId = "start";
+    [SerializeField] private string startNodeId = "1";
     [SerializeField] private List<EventNodeData> nodes = new List<EventNodeData>();
 
     public string Title => title;

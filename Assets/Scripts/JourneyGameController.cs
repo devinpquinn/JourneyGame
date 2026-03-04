@@ -7,6 +7,7 @@ public class JourneyGameController : MonoBehaviour
 {
     private enum GameState
     {
+        Intro,
         EventNode,
         RoundEnd,
         LevelUp,
@@ -30,6 +31,11 @@ public class JourneyGameController : MonoBehaviour
     [SerializeField] private TMP_Text eventTitleText;
     [SerializeField] private TMP_Text eventBodyText;
     [SerializeField] private Button okayButton;
+
+    [Header("Intro")]
+    [SerializeField] private bool showIntroAtGameStart = true;
+    [SerializeField] private string introEventResourcePath = "Events/Intro/IntroEvent";
+    [SerializeField] private bool introAppliesEffects;
 
     [Header("Hero Panel - Attributes")]
     [SerializeField] private TMP_Text strengthText;
@@ -74,6 +80,8 @@ public class JourneyGameController : MonoBehaviour
     private int xpRequiredForNextLevel;
     private bool levelUpAwardedMaxVital;
     private string levelUpAwardText;
+    private bool introShown;
+    private bool isPlayingIntro;
 
     private void Awake()
     {
@@ -90,6 +98,15 @@ public class JourneyGameController : MonoBehaviour
     {
         xpRequiredForNextLevel = Mathf.Max(1, xpRequiredForFirstLevelUp);
         LoadRegionEvents();
+
+        if (showIntroAtGameStart)
+        {
+            if (TryBeginIntroSequence())
+            {
+                return;
+            }
+        }
+
         StartNewRound(showInterRoundMessage: true);
     }
 
@@ -170,6 +187,9 @@ public class JourneyGameController : MonoBehaviour
     {
         switch (gameState)
         {
+            case GameState.Intro:
+                AdvanceFromIntroNode();
+                break;
             case GameState.EventNode:
                 AdvanceFromEventNode();
                 break;
@@ -326,7 +346,9 @@ public class JourneyGameController : MonoBehaviour
             lines.Add(node.BodyText.Trim());
         }
 
-        List<string> effectLines = ApplyNodeEffects(node);
+        List<string> effectLines = ShouldApplyCurrentNodeEffects()
+            ? ApplyNodeEffects(node)
+            : new List<string>();
         if (effectLines.Count > 0)
         {
             lines.Add(string.Empty);
@@ -575,12 +597,119 @@ public class JourneyGameController : MonoBehaviour
         BeginNextEvent();
     }
 
+    private bool TryBeginIntroSequence()
+    {
+        if (introShown)
+        {
+            return false;
+        }
+
+        string path = string.IsNullOrWhiteSpace(introEventResourcePath)
+            ? string.Empty
+            : introEventResourcePath.Trim();
+
+        if (string.IsNullOrEmpty(path))
+        {
+            return false;
+        }
+
+        RegionEventData introEvent = Resources.Load<RegionEventData>(path);
+        if (introEvent == null)
+        {
+            return false;
+        }
+
+        EventNodeData startNode = introEvent.GetStartNode();
+        if (startNode == null)
+        {
+            return false;
+        }
+
+        introShown = true;
+        isPlayingIntro = true;
+        currentEvent = introEvent;
+        prependTestResult = false;
+        lastTestAttribute = HeroAttribute.None;
+        gameState = GameState.Intro;
+
+        EnterNode(startNode);
+        return true;
+    }
+
+    private void AdvanceFromIntroNode()
+    {
+        if (currentNode == null)
+        {
+            EndIntroSequence();
+            return;
+        }
+
+        if (currentNode.HasTest)
+        {
+            bool passed = RollTest(currentNode.TestAttribute);
+            string branchNodeId = passed ? currentNode.SuccessNodeId : currentNode.FailureNodeId;
+
+            prependTestResult = true;
+            lastTestPassed = passed;
+            lastTestAttribute = currentNode.TestAttribute;
+
+            if (string.IsNullOrWhiteSpace(branchNodeId))
+            {
+                EndIntroSequence();
+                return;
+            }
+
+            EventNodeData nextNode = currentEvent.GetNode(branchNodeId);
+            if (nextNode == null)
+            {
+                EndIntroSequence();
+                return;
+            }
+
+            EnterNode(nextNode);
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(currentNode.NextNodeId))
+        {
+            EventNodeData nextNode = currentEvent.GetNode(currentNode.NextNodeId);
+            if (nextNode != null)
+            {
+                EnterNode(nextNode);
+                return;
+            }
+        }
+
+        EndIntroSequence();
+    }
+
+    private void EndIntroSequence()
+    {
+        isPlayingIntro = false;
+        currentEvent = null;
+        currentNode = null;
+        prependTestResult = false;
+        lastTestAttribute = HeroAttribute.None;
+
+        StartNewRound(showInterRoundMessage: true);
+    }
+
     private void ShowRoundStartMessage()
     {
         gameState = GameState.RoundStart;
         eventTitleText.text = "Round Start";
         eventBodyText.text = "You set out into " + regionName + ".";
         RefreshAllUi();
+    }
+
+    private bool ShouldApplyCurrentNodeEffects()
+    {
+        if (!isPlayingIntro)
+        {
+            return true;
+        }
+
+        return introAppliesEffects;
     }
 
     private void RefreshAllUi()
