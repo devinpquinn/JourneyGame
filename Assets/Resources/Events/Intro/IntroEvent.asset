@@ -12,7 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5e25128dfebc48bc0c0c689f171de, type: 3}
   m_Name: IntroEvent
   m_EditorClassIdentifier: Assembly-CSharp::RegionEventData
-  title: Untitled Event
+  title: Intro
   repeatable: 1
-  startNodeId: start
-  nodes: []
+  startNodeId: 1
+  nodes:
+  - nodeId: 1
+    bodyText: Intro event text goes here.
+    effects: []
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 2
+  - nodeId: 2
+    bodyText: Intro event continues here.
+    effects: []
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 

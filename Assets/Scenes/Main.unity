@@ -2485,8 +2485,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 071db4d0a4fba284b89247c1be047242, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 6bb358fadfd17e74086198025cc73cf3, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3063,7 +3063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &904171005
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4993,6 +4993,9 @@ MonoBehaviour:
   eventTitleText: {fileID: 439541042}
   eventBodyText: {fileID: 1894392929}
   okayButton: {fileID: 1711533457}
+  showIntroAtGameStart: 1
+  introEventResourcePath: Events/Intro/IntroEvent
+  introAppliesEffects: 0
   strengthText: {fileID: 878466370}
   courageText: {fileID: 242880597}
   wisdomText: {fileID: 187081116}
