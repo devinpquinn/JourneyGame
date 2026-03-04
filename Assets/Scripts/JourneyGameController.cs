@@ -761,7 +761,7 @@ public class JourneyGameController : MonoBehaviour
 
         if (regionProgressText != null)
         {
-            if (gameState == GameState.EventNode)
+            if (gameState != GameState.InterRound && gameState != GameState.Intro)
             {
                 float normalizedProgress = progressToClear > 0 ? Mathf.Clamp01((float)progress / progressToClear) : 0f;
                 int percentage = Mathf.RoundToInt(normalizedProgress * 100f);
