@@ -2183,7 +2183,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589150657}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ac93efcb66c02f4d84446e4a82970e3, type: 3}
   m_Name: 
@@ -2193,13 +2193,13 @@ MonoBehaviour:
     panelImage: {fileID: 1268836065}
     panelCanvasGroup: {fileID: 1268836067}
     activeSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
-    inactiveSprite: {fileID: 21300000, guid: 88fdffe907264de4c9bc70ac412975dc, type: 3}
+    inactiveSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
     inactiveAlpha: 0.5
   - panelRect: {fileID: 1561280862}
     panelImage: {fileID: 1561280863}
     panelCanvasGroup: {fileID: 1561280865}
     activeSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
-    inactiveSprite: {fileID: 21300000, guid: 88fdffe907264de4c9bc70ac412975dc, type: 3}
+    inactiveSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
     inactiveAlpha: 0.5
   - panelRect: {fileID: 770667793}
     panelImage: {fileID: 770667794}
@@ -2212,10 +2212,10 @@ MonoBehaviour:
     panelImage: {fileID: 19836541}
     panelCanvasGroup: {fileID: 19836543}
     activeSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
-    inactiveSprite: {fileID: 21300000, guid: 88fdffe907264de4c9bc70ac412975dc, type: 3}
-    inactiveAlpha: 0.75
+    inactiveSprite: {fileID: 21300000, guid: f1b45dc6e647cd44a81e08f2a2399815, type: 3}
+    inactiveAlpha: 1
   emphasizedAlpha: 1
-  emphasizedScale: 1.01
+  emphasizedScale: 1.02
   transitionDuration: 0.15
   transitionCurve:
     serializedVersion: 2
