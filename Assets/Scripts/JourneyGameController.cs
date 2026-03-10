@@ -343,7 +343,8 @@ public class JourneyGameController : MonoBehaviour
         if (prependTestResult)
         {
             string passText = lastTestPassed ? "passed" : "failed";
-            lines.Add(ToItalics("You " + passText + " a Test of " + HeroNames.Attribute(lastTestAttribute) + "!"));
+            string testResultLine = "You " + passText + " a Test of " + HeroNames.Attribute(lastTestAttribute) + "!";
+            lines.Add(lastTestPassed ? ToGreenItalics(testResultLine) : ToRedItalics(testResultLine));
             lines.Add(string.Empty);
             prependTestResult = false;
             lastTestAttribute = HeroAttribute.None;
@@ -369,7 +370,7 @@ public class JourneyGameController : MonoBehaviour
         if (node.HasTest)
         {
             lines.Add(string.Empty);
-            lines.Add(ToItalics("You face a Test of " + HeroNames.Attribute(node.TestAttribute) + "..."));
+            lines.Add(ToBlueItalics("You face a Test of " + HeroNames.Attribute(node.TestAttribute) + "..."));
         }
 
         eventTitleText.text = currentEvent != null ? currentEvent.Title : regionName;
@@ -388,12 +389,25 @@ public class JourneyGameController : MonoBehaviour
 
             if (effect.Target == HeroEffectTarget.UnlockEvent)
             {
-                bool wasAdded = AddEventToPool(effect.EventToAdd);
+                AddEventToPool(effect.EventToAdd);
                 continue;
             }
 
             ApplyEffect(effect.Target, effect.Amount);
-            effectLines.Add(ToItalics(FormatEffectLine(effect.Amount, HeroNames.EffectTarget(effect.Target))));
+            string formattedLine = FormatEffectLine(effect.Amount, HeroNames.EffectTarget(effect.Target));
+
+            if (effect.Amount > 0)
+            {
+                effectLines.Add(ToGreenItalics(formattedLine));
+            }
+            else if (effect.Amount < 0)
+            {
+                effectLines.Add(ToRedItalics(formattedLine));
+            }
+            else
+            {
+                effectLines.Add(ToItalics(formattedLine));
+            }
         }
 
         if (Hero.CurrentHealth <= 0)
@@ -844,5 +858,20 @@ public class JourneyGameController : MonoBehaviour
     private static string ToItalics(string value)
     {
         return "<i>" + value + "</i>";
+    }
+
+    private static string ToBlueItalics(string value)
+    {
+        return "<color=blue><i>" + value + "</i></color>";
+    }
+
+    private static string ToGreenItalics(string value)
+    {
+        return "<color=green><i>" + value + "</i></color>";
+    }
+
+    private static string ToRedItalics(string value)
+    {
+        return "<color=red><i>" + value + "</i></color>";
     }
 }
