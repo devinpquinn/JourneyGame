@@ -26,6 +26,7 @@ public class JourneyGameController : MonoBehaviour
     [Header("Region")]
     [SerializeField] private string regionName = "Starter Region";
     [SerializeField] private int progressToClear = 20;
+    private string baseEventsSubfolder = "Base";
 
     [Header("Event Panel")]
     [SerializeField] private TMP_Text eventTitleText;
@@ -61,6 +62,7 @@ public class JourneyGameController : MonoBehaviour
     private readonly List<RegionEventData> allRegionEvents = new List<RegionEventData>();
     private readonly List<RegionEventData> eventDeck = new List<RegionEventData>();
     private readonly HashSet<string> seenNonRepeatableEventIds = new HashSet<string>();
+    private readonly HashSet<string> pooledEventIds = new HashSet<string>();
 
     private RegionEventData currentEvent;
     private EventNodeData currentNode;
@@ -146,14 +148,20 @@ public class JourneyGameController : MonoBehaviour
     private void LoadRegionEvents()
     {
         allRegionEvents.Clear();
-        string path = "Events/Regions/" + regionName;
-        RegionEventData[] loaded = Resources.LoadAll<RegionEventData>(path);
+        pooledEventIds.Clear();
+        string regionRootPath = "Events/Regions/" + regionName;
+        string basePath = string.IsNullOrWhiteSpace(baseEventsSubfolder)
+            ? regionRootPath
+            : regionRootPath + "/" + baseEventsSubfolder.Trim();
+
+        RegionEventData[] loaded = Resources.LoadAll<RegionEventData>(basePath);
 
         for (int index = 0; index < loaded.Length; index++)
         {
             if (loaded[index] != null)
             {
                 allRegionEvents.Add(loaded[index]);
+                pooledEventIds.Add(loaded[index].name);
             }
         }
 
@@ -377,6 +385,13 @@ public class JourneyGameController : MonoBehaviour
         for (int index = 0; index < effects.Count; index++)
         {
             EventEffect effect = effects[index];
+
+            if (effect.Target == HeroEffectTarget.UnlockEvent)
+            {
+                bool wasAdded = AddEventToPool(effect.EventToAdd);
+                continue;
+            }
+
             ApplyEffect(effect.Target, effect.Amount);
             effectLines.Add(ToItalics(FormatEffectLine(effect.Amount, HeroNames.EffectTarget(effect.Target))));
         }
@@ -415,9 +430,29 @@ public class JourneyGameController : MonoBehaviour
                 return AddProgress(amount);
             case HeroEffectTarget.Xp:
                 return AddExperience(amount);
+            case HeroEffectTarget.UnlockEvent:
+                return 0;
             default:
                 return 0;
         }
+    }
+
+    private bool AddEventToPool(RegionEventData eventData)
+    {
+        if (eventData == null)
+        {
+            return false;
+        }
+
+        if (!pooledEventIds.Add(eventData.name))
+        {
+            return false;
+        }
+
+        allRegionEvents.Add(eventData);
+        eventDeck.Add(eventData);
+        Shuffle(eventDeck);
+        return true;
     }
 
     private int AddProgress(int amount)
