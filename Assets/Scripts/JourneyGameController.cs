@@ -82,6 +82,8 @@ public class JourneyGameController : MonoBehaviour
     private int xpRequiredForNextLevel;
     private bool levelUpAwardedMaxVital;
     private string levelUpAwardText;
+    private bool pendingLevelUpPresentation;
+    private bool isResolvingNodeEffects;
     private bool introShown;
     private bool isPlayingIntro;
 
@@ -185,6 +187,12 @@ public class JourneyGameController : MonoBehaviour
 
     private void AdvanceFromEventNode()
     {
+        if (pendingLevelUpPresentation)
+        {
+            ShowPendingLevelUp();
+            return;
+        }
+
         if (depletedFromCurrentNode)
         {
             ShowRoundEnd(Hero.CurrentHealth <= 0 ? RoundEndType.HealthDepleted : RoundEndType.MoraleDepleted);
@@ -384,6 +392,7 @@ public class JourneyGameController : MonoBehaviour
     {
         List<string> effectLines = new List<string>();
         IReadOnlyList<EventEffect> effects = node.Effects;
+        isResolvingNodeEffects = true;
 
         for (int index = 0; index < effects.Count; index++)
         {
@@ -411,6 +420,8 @@ public class JourneyGameController : MonoBehaviour
                 effectLines.Add(ToItalics(formattedLine));
             }
         }
+
+        isResolvingNodeEffects = false;
 
         if (Hero.CurrentHealth <= 0)
         {
@@ -531,6 +542,12 @@ public class JourneyGameController : MonoBehaviour
 
     private void HandleLevelUpAcknowledge()
     {
+        if (depletedFromCurrentNode)
+        {
+            ShowRoundEnd(Hero.CurrentHealth <= 0 ? RoundEndType.HealthDepleted : RoundEndType.MoraleDepleted);
+            return;
+        }
+
         if (pendingRoundEndType == RoundEndType.Win)
         {
             ShowRoundEnd(RoundEndType.Win);
@@ -538,6 +555,15 @@ public class JourneyGameController : MonoBehaviour
         }
 
         BeginNextEvent();
+    }
+
+    private void ShowPendingLevelUp()
+    {
+        pendingLevelUpPresentation = false;
+        gameState = GameState.LevelUp;
+        eventTitleText.text = "Level Up";
+        eventBodyText.text = "You are now Level " + currentLevel + ".\n\n" + levelUpAwardText;
+        RefreshAllUi();
     }
 
     private int AddExperience(int amount)
@@ -609,6 +635,13 @@ public class JourneyGameController : MonoBehaviour
         }
 
         xpRequiredForNextLevel++;
+
+        if (isResolvingNodeEffects)
+        {
+            pendingLevelUpPresentation = true;
+            RefreshAllUi();
+            return;
+        }
 
         gameState = GameState.LevelUp;
         eventTitleText.text = "Level Up";
