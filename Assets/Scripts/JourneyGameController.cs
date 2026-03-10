@@ -344,7 +344,7 @@ public class JourneyGameController : MonoBehaviour
         {
             string passText = lastTestPassed ? "passed" : "failed";
             string testResultLine = "You " + passText + " a Test of " + HeroNames.Attribute(lastTestAttribute) + "!";
-            lines.Add(lastTestPassed ? ToGreenItalics(testResultLine) : ToRedItalics(testResultLine));
+            lines.Add(lastTestPassed ? ToPurpleItalics(testResultLine) : ToRedItalics(testResultLine));
             lines.Add(string.Empty);
             prependTestResult = false;
             lastTestAttribute = HeroAttribute.None;
@@ -398,7 +398,7 @@ public class JourneyGameController : MonoBehaviour
 
             if (effect.Amount > 0)
             {
-                effectLines.Add(ToGreenItalics(formattedLine));
+                effectLines.Add(ToPurpleItalics(formattedLine));
             }
             else if (effect.Amount < 0)
             {
@@ -865,9 +865,9 @@ public class JourneyGameController : MonoBehaviour
         return "<color=blue><i>" + value + "</i></color>";
     }
 
-    private static string ToGreenItalics(string value)
+    private static string ToPurpleItalics(string value)
     {
-        return "<color=green><i>" + value + "</i></color>";
+        return "<color=purple><i>" + value + "</i></color>";
     }
 
     private static string ToRedItalics(string value)
