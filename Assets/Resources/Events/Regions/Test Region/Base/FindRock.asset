@@ -12,7 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5e25128dfebc48bc0c0c689f171de, type: 3}
   m_Name: FindRock
   m_EditorClassIdentifier: Assembly-CSharp::RegionEventData
-  title: Untitled Event
-  repeatable: 1
+  title: Found A Cool Rock
+  repeatable: 0
   startNodeId: 1
-  nodes: []
+  nodes:
+  - nodeId: 1
+    bodyText: You find a cool rock!
+    effects:
+    - target: 6
+      amount: 1
+      eventToAdd: {fileID: 0}
+    - target: 9
+      amount: 1
+      eventToAdd: {fileID: 11400000, guid: 11fb6ac6fb3f5aa4ba5bcf297663046d, type: 2}
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 

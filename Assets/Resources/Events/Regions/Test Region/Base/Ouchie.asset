@@ -21,6 +21,7 @@ MonoBehaviour:
     effects:
     - target: 5
       amount: -1
+      eventToAdd: {fileID: 0}
     testAttribute: 0
     successNodeId: 
     failureNodeId: 

@@ -12,7 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5e25128dfebc48bc0c0c689f171de, type: 3}
   m_Name: LostRock
   m_EditorClassIdentifier: Assembly-CSharp::RegionEventData
-  title: Untitled Event
-  repeatable: 1
+  title: Lost A Cool Rock
+  repeatable: 0
   startNodeId: 1
-  nodes: []
+  nodes:
+  - nodeId: 1
+    bodyText: You lost your cool rock.
+    effects:
+    - target: 6
+      amount: -1
+      eventToAdd: {fileID: 0}
+    testAttribute: 0
+    successNodeId: 
+    failureNodeId: 
+    nextNodeId: 
