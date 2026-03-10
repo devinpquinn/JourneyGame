@@ -268,9 +268,12 @@ public class JourneyGameController : MonoBehaviour
         depletedFromCurrentNode = false;
         pendingRoundEndType = RoundEndType.None;
 
+        bool rebuiltDeckThisDraw = false;
+
         if (eventDeck.Count == 0)
         {
             RebuildDeck();
+            rebuiltDeckThisDraw = true;
         }
 
         if (eventDeck.Count == 0)
@@ -278,6 +281,11 @@ public class JourneyGameController : MonoBehaviour
             eventTitleText.text = regionName;
             eventBodyText.text = "No events were found for this region.";
             return;
+        }
+
+        if (rebuiltDeckThisDraw)
+        {
+            PreventImmediateRepeatAfterRebuild();
         }
 
         int lastIndex = eventDeck.Count - 1;
@@ -297,6 +305,33 @@ public class JourneyGameController : MonoBehaviour
         }
 
         EnterNode(currentNode);
+    }
+
+    private void PreventImmediateRepeatAfterRebuild()
+    {
+        if (currentEvent == null || eventDeck.Count <= 1)
+        {
+            return;
+        }
+
+        int drawIndex = eventDeck.Count - 1;
+        if (eventDeck[drawIndex] == null || eventDeck[drawIndex].name != currentEvent.name)
+        {
+            return;
+        }
+
+        for (int index = 0; index < drawIndex; index++)
+        {
+            if (eventDeck[index] == null || eventDeck[index].name == currentEvent.name)
+            {
+                continue;
+            }
+
+            RegionEventData temp = eventDeck[drawIndex];
+            eventDeck[drawIndex] = eventDeck[index];
+            eventDeck[index] = temp;
+            return;
+        }
     }
 
     private void EnterNode(EventNodeData node)
