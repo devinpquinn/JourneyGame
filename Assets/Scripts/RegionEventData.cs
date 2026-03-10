@@ -49,7 +49,7 @@ public class RegionEventData : ScriptableObject
 public class EventNodeData
 {
     [SerializeField] private string nodeId = "1";
-    [SerializeField] [TextArea(3, 10)] private string bodyText;
+    [SerializeField] [TextArea(1, 10)] private string bodyText;
     [SerializeField] private List<EventEffect> effects = new List<EventEffect>();
     [SerializeField] private HeroAttribute testAttribute = HeroAttribute.None;
     [SerializeField] private string successNodeId;
