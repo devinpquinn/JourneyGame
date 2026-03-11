@@ -80,7 +80,10 @@ public class JourneyGameController : MonoBehaviour
     private int currentLevel = 1;
     private int currentXp;
     private int xpRequiredForNextLevel;
-    private bool levelUpAwardedMaxVital;
+    private bool pendingLevelUpAwardsMaxVital;
+    private bool pendingLevelUpBoostsHealth;
+    private HeroAttribute pendingLevelUpAttribute = HeroAttribute.None;
+    private bool hasPendingLevelUpAward;
     private string levelUpAwardText;
     private bool pendingLevelUpPresentation;
     private bool isResolvingNodeEffects;
@@ -609,30 +612,11 @@ public class JourneyGameController : MonoBehaviour
         currentLevel++;
         currentXp = 0;
 
-        bool awardMaxVital = currentLevel % 5 == 0;
-        levelUpAwardedMaxVital = awardMaxVital;
-
-        if (awardMaxVital)
-        {
-            bool boostHealth = Random.value < 0.5f;
-            if (boostHealth)
-            {
-                Hero.AddMaxHealth(1);
-                levelUpAwardText = "Your Max Health has increased by 1.";
-            }
-            else
-            {
-                Hero.AddMaxMorale(1);
-                levelUpAwardText = "Your Max Morale has increased by 1.";
-            }
-        }
-        else
-        {
-            HeroAttribute attribute = GetRandomAttribute();
-            int actualDelta = Hero.AddAttribute(attribute, 5);
-            int displayedDelta = Mathf.Abs(actualDelta);
-            levelUpAwardText = "Your " + HeroNames.Attribute(attribute) + " has increased by " + displayedDelta + ".";
-        }
+        pendingLevelUpAwardsMaxVital = currentLevel % 5 == 0;
+        pendingLevelUpBoostsHealth = pendingLevelUpAwardsMaxVital && Random.value < 0.5f;
+        pendingLevelUpAttribute = pendingLevelUpAwardsMaxVital ? HeroAttribute.None : GetRandomAttribute();
+        hasPendingLevelUpAward = true;
+        levelUpAwardText = string.Empty;
 
         xpRequiredForNextLevel++;
 
@@ -651,9 +635,40 @@ public class JourneyGameController : MonoBehaviour
 
     private string BuildLevelUpBodyText()
     {
+        ApplyPendingLevelUpAwardIfNeeded();
         string levelLine = ToPurpleItalics("You are now Level " + currentLevel + ".");
         string awardLine = ToPurpleItalics(levelUpAwardText);
         return levelLine + "\n\n" + awardLine;
+    }
+
+    private void ApplyPendingLevelUpAwardIfNeeded()
+    {
+        if (!hasPendingLevelUpAward)
+        {
+            return;
+        }
+
+        if (pendingLevelUpAwardsMaxVital)
+        {
+            if (pendingLevelUpBoostsHealth)
+            {
+                Hero.AddMaxHealth(1);
+                levelUpAwardText = "Your Max Health has increased by 1.";
+            }
+            else
+            {
+                Hero.AddMaxMorale(1);
+                levelUpAwardText = "Your Max Morale has increased by 1.";
+            }
+        }
+        else
+        {
+            int actualDelta = Hero.AddAttribute(pendingLevelUpAttribute, 5);
+            int displayedDelta = Mathf.Abs(actualDelta);
+            levelUpAwardText = "Your " + HeroNames.Attribute(pendingLevelUpAttribute) + " has increased by " + displayedDelta + ".";
+        }
+
+        hasPendingLevelUpAward = false;
     }
 
     private HeroAttribute GetRandomAttribute()
