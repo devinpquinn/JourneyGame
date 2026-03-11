@@ -807,27 +807,27 @@ public class JourneyGameController : MonoBehaviour
     {
         if (strengthText != null)
         {
-            strengthText.text = Hero.Strength + "%";
+            strengthText.text = Hero.Strength.ToString();
         }
 
         if (courageText != null)
         {
-            courageText.text = Hero.Courage + "%";
+            courageText.text = Hero.Courage.ToString();
         }
 
         if (wisdomText != null)
         {
-            wisdomText.text = Hero.Wisdom + "%";
+            wisdomText.text = Hero.Wisdom.ToString();
         }
 
         if (graceText != null)
         {
-            graceText.text = Hero.Grace + "%";
+            graceText.text = Hero.Grace.ToString();
         }
 
         if (luckText != null)
         {
-            luckText.text = Hero.Luck + "%";
+            luckText.text = Hero.Luck.ToString();
         }
 
         if (healthLabelText != null)
