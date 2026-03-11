@@ -562,7 +562,7 @@ public class JourneyGameController : MonoBehaviour
         pendingLevelUpPresentation = false;
         gameState = GameState.LevelUp;
         eventTitleText.text = "Level Up";
-        eventBodyText.text = "You are now Level " + currentLevel + ".\n\n" + levelUpAwardText;
+        eventBodyText.text = BuildLevelUpBodyText();
         RefreshAllUi();
     }
 
@@ -645,8 +645,15 @@ public class JourneyGameController : MonoBehaviour
 
         gameState = GameState.LevelUp;
         eventTitleText.text = "Level Up";
-        eventBodyText.text = "You are now Level " + currentLevel + ".\n\n" + levelUpAwardText;
+        eventBodyText.text = BuildLevelUpBodyText();
         RefreshAllUi();
+    }
+
+    private string BuildLevelUpBodyText()
+    {
+        string levelLine = ToPurpleItalics("You are now Level " + currentLevel + ".");
+        string awardLine = ToPurpleItalics(levelUpAwardText);
+        return levelLine + "\n\n" + awardLine;
     }
 
     private HeroAttribute GetRandomAttribute()
